@@ -902,6 +902,31 @@
   body[data-theme="light"] .footer-text { color: rgba(13,31,60,0.7); }
   body[data-theme="light"] .footer-text strong { color: #0d1f3c; }
   body[data-theme="light"] .footer-copy { color: rgba(13,31,60,0.35); }
+  /* ── PUNCH LIST ACCORDION ── */
+  .pl-acc { border:1px solid var(--border); border-radius:10px; overflow:hidden; margin-bottom:8px; }
+  .pl-acc-hdr { display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;user-select:none;background:rgba(0,0,0,0.15); }
+  .pl-acc-hdr:hover { background:rgba(0,0,0,0.25); }
+  .pl-acc-dot { width:8px;height:8px;border-radius:50%;flex-shrink:0; }
+  .pl-acc-name { font-size:12px;font-weight:600;color:var(--text);flex:1; }
+  .pl-acc-meta { font-size:10px;color:var(--muted); }
+  .pl-acc-badge { font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;background:rgba(46,196,182,0.15);color:var(--ok);border:1px solid rgba(46,196,182,0.3); }
+  .pl-acc-arr { font-size:10px;color:var(--muted);transition:transform .2s;margin-left:4px; }
+  .pl-acc-arr.open { transform:rotate(180deg); }
+  .pl-acc-body { display:none;overflow-x:auto;border-top:1px solid var(--border); }
+  .pl-acc-body.open { display:block; }
+  .pl-tbl { width:100%;border-collapse:collapse;font-size:11px;min-width:620px; }
+  .pl-tbl th { padding:6px 10px;font-size:10px;font-weight:600;color:var(--th-color);text-align:left;border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.3px;background:rgba(0,0,0,0.1); }
+  .pl-tbl td { padding:5px 10px;border-bottom:1px solid rgba(255,255,255,0.04);color:var(--td-color);vertical-align:top;line-height:1.45; }
+  .pl-tbl tr:last-child td { border-bottom:none; }
+  .pl-tbl tr:hover td { background:rgba(255,255,255,0.03); }
+  .pl-sr   { font-family:monospace;font-size:10px;color:var(--muted);white-space:nowrap; }
+  .pl-irid { font-family:monospace;font-size:10px;color:var(--acc);white-space:nowrap; }
+  .pl-date { font-size:10px;color:var(--muted);white-space:nowrap; }
+  .pl-ref  { font-size:10px;color:var(--acc); }
+  .pl-crit { display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(244,162,97,0.15);color:var(--gold);border:1px solid rgba(244,162,97,0.3); }
+  .pl-ok   { display:inline-block;padding:1px 7px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(46,196,182,0.15);color:var(--ok);border:1px solid rgba(46,196,182,0.3); }
+  .pl-op   { display:inline-block;padding:1px 7px;border-radius:4px;font-size:10px;font-weight:600;background:rgba(231,111,81,0.15);color:var(--warn);border:1px solid rgba(231,111,81,0.3); }
+
 </style>
 
 <style>
@@ -1392,7 +1417,7 @@ window.addEventListener('load', function() {
         <div style="padding:14px 18px;display:flex;flex-direction:column;gap:12px">
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
             <div class="kpi-card kred"><div class="kl">% plates at EEW</div><div class="kv"><span data-ov="voest-pct">61.00%</span></div><div class="kd neg">Target: 100% &nbsp;|&nbsp; Delta: <span data-ov="voest-delta">-39.00%</span></div></div>
-            <div class="kpi-card kblue"><div class="kl">Total plates ordered</div><div class="kv">4,502 <span style="font-size:14px;color:rgba(200,216,232,0.5)">NOS</span></div><div class="kd neu">Outstanding: 1,832 plates</div></div>
+            <div class="kpi-card kblue"><div class="kl">Total plates ordered</div><div class="kv">4,502 <span style="font-size:14px;color:rgba(200,216,232,0.5)">NOS</span></div><div class="kd neu">Outstanding: <span data-ov="voest-outstanding">1,832</span> plates</div></div>
             <div class="kpi-card kamber"><div class="kl">Plates received at EEW</div><div class="kv"><span data-ov="voest-nos">2,746</span> <span style="font-size:14px;color:rgba(200,216,232,0.5)">NOS</span></div><div class="kd neg"><span data-ov="voest-pending-nos">1,756</span> plates still pending</div></div>
           </div>
           <div class="gauge-wrap">
@@ -1434,7 +1459,7 @@ window.addEventListener('load', function() {
                   <td style="padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05);color:#c8d8e8">Total plates ordered (NOS)</td>
                   <td style="text-align:right;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05)" class="val-neu">4,502</td>
                   <td style="text-align:right;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(200,216,232,0.55)">—</td>
-                  <td style="text-align:right;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05)" class="val-neg">(1,832)</td>
+                  <td style="text-align:right;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05)" class="val-neg">(<span data-ov="voest-outstanding2">1,832</span>)</td>
                   <td style="text-align:center;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05)"><span class="pill pill-amb">Partial</span></td>
                 </tr>
                 <tr>
@@ -2270,13 +2295,32 @@ window.addEventListener('load', function() {
           </div>
         </div>
         <div class="card">
-          <div class="card-title">Recommendations for future projects</div>
-          <div>
-            <div class="rec-item"><div class="rec-num">01</div><div><div class="rec-title">Early CRA alloy procurement locking</div><div class="rec-desc">Secure Alloy 625 and 825 strip orders minimum 6 months ahead of pipe production start to mitigate mill capacity constraints at specialist suppliers such as VAGB.</div></div></div>
-            <div class="rec-item"><div class="rec-num">02</div><div><div class="rec-title">Digital ITP management platform</div><div class="rec-desc">Implement a web-based ITP tracking system shared across all parties to replace email chains and spreadsheet-based hold-point management.</div></div></div>
-            <div class="rec-item"><div class="rec-num">03</div><div><div class="rec-title">PAUT as primary NDE method</div><div class="rec-desc">Adopt phased-array UT as the default NDE tool for seam welds and CRA bond inspection, reducing RT film cost and improving throughput.</div></div></div>
-            <div class="rec-item"><div class="rec-num">04</div><div><div class="rec-title">Electric induction PWHT</div><div class="rec-desc">Transition PWHT furnaces to electric induction heating powered by renewable energy to reduce carbon footprint and improve temperature uniformity.</div></div></div>
-            <div class="rec-item" style="border-bottom:none"><div class="rec-num">05</div><div><div class="rec-title">HIB qualification pre-programme</div><div class="rec-desc">For future projects including HIBs, conduct bending and heat treatment qualification trials at least 4 months prior to production start.</div></div></div>
+          <div class="card-title">Punch List — EEW Main &amp; Sub-Vendor &nbsp;·&nbsp; Rev.00 · 15 March 2026</div>
+
+          <!-- KPI strip -->
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:16px">
+            <div style="background:var(--metric-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center">
+              <div style="font-family:var(--fc);font-size:20px;font-weight:700;color:var(--text)" id="pl-total">53</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px">Total items</div>
+            </div>
+            <div style="background:var(--metric-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center">
+              <div style="font-family:var(--fc);font-size:20px;font-weight:700;color:var(--ok)" id="pl-closed">53</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px">Closed</div>
+            </div>
+            <div style="background:var(--metric-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center">
+              <div style="font-family:var(--fc);font-size:20px;font-weight:700;color:var(--warn)" id="pl-open">0</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px">Open</div>
+            </div>
+            <div style="background:var(--metric-bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;text-align:center">
+              <div style="font-family:var(--fc);font-size:20px;font-weight:700;color:var(--ok)" id="pl-rate">100%</div>
+              <div style="font-size:10px;color:var(--muted);margin-top:3px;text-transform:uppercase;letter-spacing:.4px">Closure rate</div>
+            </div>
+          </div>
+
+          <!-- Accordion groups -->
+          <div id="pl-acc-root"></div>
+          <div style="font-size:10px;color:var(--muted);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+            Rev.00 · 15 March 2026 · SAIPEM PO 1506050 · QCP-ITP 5129_20-4600015016-00054 · Criticality Rating II throughout
           </div>
         </div>
       </div>
@@ -2983,11 +3027,136 @@ document.addEventListener('click', function(e) {
 
 
 /* ══ GOOGLE SHEETS LIVE SYNC ══ */
+/* ══ PUNCH LIST ACCORDION ══ */
+var PL_GROUPS = [
+  {id:'vagb', label:'EEW / VOESTALPINE GROBBLECH GmbH (VAGB) — Clad Plate Supply', color:'#f4a261', open:true},
+  {id:'eew',  label:'EEW Pipe Production Erndtebrück — Cladded Pipes',              color:'#00b4d8', open:true},
+  {id:'but',  label:'BUTTING / VOESTALPINE GROBBLECH GmbH',                         color:'#888',    open:true}
+];
+var PL_STATE = { groups: PL_GROUPS };
+
+function renderPunchList(items) {
+  var root = document.getElementById('pl-acc-root');
+  if (!root) return;
+  root.innerHTML = '';
+  var total = items.length;
+  var closed = items.filter(function(i){ return i.status.toUpperCase()==='CLOSED'; }).length;
+  var open   = total - closed;
+  var rate   = total > 0 ? Math.round(closed/total*100)+'%' : '—';
+  function setEl(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; }
+  setEl('pl-total',  total);
+  setEl('pl-closed', closed);
+  setEl('pl-open',   open);
+  setEl('pl-rate',   rate);
+
+  PL_GROUPS.forEach(function(g) {
+    var its = items.filter(function(p){ return p.grp === g.id; });
+    if (!its.length) return;
+    var allClosed = its.every(function(i){ return i.status.toUpperCase()==='CLOSED'; });
+    var acc  = document.createElement('div'); acc.className = 'pl-acc';
+    var hdr  = document.createElement('div'); hdr.className = 'pl-acc-hdr';
+    hdr.innerHTML =
+      '<div class="pl-acc-dot" style="background:'+g.color+'"></div>'+
+      '<div class="pl-acc-name">'+g.label+'</div>'+
+      '<div class="pl-acc-meta">'+its.length+' items</div>'+
+      '<div class="pl-acc-badge">'+(allClosed?'All CLOSED':closed+'/'+its.length+' CLOSED')+'</div>'+
+      '<div class="pl-acc-arr '+(g.open?'open':'')+'">▼</div>';
+    var body = document.createElement('div');
+    body.className = 'pl-acc-body'+(g.open?' open':'');
+    hdr.onclick = function() {
+      g.open = !g.open;
+      body.classList.toggle('open', g.open);
+      hdr.querySelector('.pl-acc-arr').classList.toggle('open', g.open);
+    };
+    var rows = its.map(function(it){
+      var st = it.status.toUpperCase()==='CLOSED' ? '<span class="pl-ok">CLOSED</span>' : '<span class="pl-op">OPEN</span>';
+      var ref = (it.punch && it.punch!=='N/A' && it.punch!=='—') ? '<span class="pl-ref">'+it.punch+'</span>' : '—';
+      return '<tr>'+
+        '<td class="pl-sr">'+it.sr+'</td>'+
+        '<td class="pl-irid">'+it.irid+'</td>'+
+        '<td>'+it.desc+'</td>'+
+        '<td><span class="pl-crit">II</span></td>'+
+        '<td class="pl-date">'+it.close+'</td>'+
+        '<td>'+ref+'</td>'+
+        '<td>'+st+'</td>'+
+        '</tr>';
+    }).join('');
+    body.innerHTML = '<table class="pl-tbl"><thead><tr>'+
+      '<th>Sr</th><th>IRID</th><th>Description / Observation</th><th>Crit.</th>'+
+      '<th>Close date</th><th>Punch list ref.</th><th>Status</th>'+
+      '</tr></thead><tbody>'+rows+'</tbody></table>';
+    acc.appendChild(hdr); acc.appendChild(body); root.appendChild(acc);
+  });
+}
+
+/* Static fallback data — used until GAS sync arrives */
+var PL_STATIC = [
+  {sr:32,grp:'vagb',irid:'IRID 05',desc:'Supply of clad plate · Plates 378145, 379490 — bonding defects, Manual UT not acceptable',close:'29.06.2025',punch:'CR-27, CR-26',status:'CLOSED'},
+  {sr:33,grp:'vagb',irid:'IRID 06',desc:'Supply of clad plate · Plate 382247 rejected · Plate 381041 bonding defect on edge',close:'29.06.2025',punch:'CR-25',status:'CLOSED'},
+  {sr:34,grp:'vagb',irid:'IRID 07',desc:'Supply of clad plate · Plates 381035, 381038, 382248 — UT rejected / not acceptable',close:'27.06.2025',punch:'CR-28, CR-29, CR-30',status:'CLOSED'},
+  {sr:35,grp:'vagb',irid:'IRID 08',desc:'Supply of clad plate · Plates 384654, 382221 rejected · Plate 384614 not acceptable',close:'21.07.2025',punch:'CR-32, CR-34',status:'CLOSED'},
+  {sr:36,grp:'vagb',irid:'IRID 09',desc:'Supply of clad plate · Plate 389131 — Manual UT not acceptable (1 bonding defect)',close:'22.07.2025',punch:'CR-31',status:'CLOSED'},
+  {sr:39,grp:'vagb',irid:'IRID 18',desc:'Supply of clad plate · Plate 389150 — Manual UT not acceptable',close:'29.07.2025',punch:'CR-35',status:'CLOSED'},
+  {sr:55,grp:'vagb',irid:'IRID 022',desc:'Supply of clad plate · Plate 382322 — Manual UT failed (bonding defect on longitudinal edge)',close:'20.08.2025',punch:'CR-54',status:'CLOSED'},
+  {sr:57,grp:'vagb',irid:'IRID 023',desc:'Supply of clad plate · Plate 382326 — Manual UT failed (bonding defect on longitudinal edge)',close:'01.09.2025',punch:'CR-61',status:'CLOSED'},
+  {sr:60,grp:'vagb',irid:'IRID 024',desc:'Supply of clad plate · Plate 382332 — Manual UT failed (bonding defect, transversal edge)',close:'04.09.2025',punch:'CR-72',status:'CLOSED'},
+  {sr:61,grp:'vagb',irid:'IRID 024',desc:'Supply of clad plate · Plate 397969 — plate width requirement not met',close:'08.09.2025',punch:'CR-83',status:'CLOSED'},
+  {sr:62,grp:'vagb',irid:'IRID 026',desc:'Supply of clad plate · Plate 382339 — clad metal thickness below minimum requirement',close:'15.09.2025',punch:'CR-101',status:'CLOSED'},
+  {sr:63,grp:'vagb',irid:'IRID 027',desc:'Supply of clad plate · Plate 101707 — 23 bonding defects on longitudinal edge',close:'22.09.2025',punch:'CR-106',status:'CLOSED'},
+  {sr:64,grp:'vagb',irid:'IRID 028',desc:'Supply of clad plate · Plate 396497 — 5 bonding defects on longitudinal edge',close:'30.09.2025',punch:'CR-110',status:'CLOSED'},
+  {sr:66,grp:'vagb',irid:'IRID 029',desc:'Supply of clad plate · Plate 103715 — 1 bonding defect on transversal edge',close:'14.10.2025',punch:'CR-115',status:'CLOSED'},
+  {sr:67,grp:'vagb',irid:'IRID 030',desc:'Supply of clad plate · Plate 111825 — grinding defects on edge, base metal thickness below min.',close:'14.10.2025',punch:'CR-118',status:'CLOSED'},
+  {sr:70,grp:'vagb',irid:'IRID 031',desc:'Supply of clad plate · Rejected plates CW-43/2025',close:'20.10.2025',punch:'—',status:'CLOSED'},
+  {sr:71,grp:'vagb',irid:'IRID 033',desc:'Supply of clad plate · Remedial action on rejected plates CW-44/2025',close:'08.11.2025',punch:'CR-125',status:'CLOSED'},
+  {sr:73,grp:'vagb',irid:'IRID 033',desc:'Supply of clad plate · Rejected plates CW-45/2025',close:'03.11.2025',punch:'—',status:'CLOSED'},
+  {sr:76,grp:'vagb',irid:'IRID 037',desc:'Supply of clad plate · Plate 343101 — dimensional control not meeting requirements',close:'01.12.2025',punch:'CR-24',status:'CLOSED'},
+  {sr:82,grp:'but', irid:'IRID 045',desc:'Supply of clad plate · Plate 136077 (Alloy 825) — on hold for inspection, bonding defect',close:'27.01.2026',punch:'—',status:'CLOSED'},
+  {sr:37,grp:'eew', irid:'IRID 11', desc:'Discrepancy between approved Shell Drawing and pipe production procedure',close:'10.09.2025',punch:'N/A',status:'CLOSED'},
+  {sr:38,grp:'eew', irid:'IRID 12', desc:'DWTT device failure (compressed air) — sample damaged, test result invalid',close:'04.07.2025',punch:'N/A',status:'CLOSED'},
+  {sr:40,grp:'eew', irid:'IRID 16', desc:'NCR COMP3-QG-QM-NCR-00009 — EEW proceeded without approval',close:'via NCR',punch:'—',status:'CLOSED'},
+  {sr:41,grp:'eew', irid:'IRID 24', desc:'MPQT Item 201 — sample N0915 failed CTOD',close:'08.09.2025',punch:'N/A',status:'CLOSED'},
+  {sr:42,grp:'eew', irid:'IRID 31', desc:'MPQT Item 601 — sample N0922 failed CTOD',close:'08.09.2025',punch:'N/A',status:'CLOSED'},
+  {sr:43,grp:'eew', irid:'IRID 31', desc:'MPQT Item 301 — CTOD failure · NCR 033764-SUO-NCR-0002',close:'via NCR',punch:'—',status:'CLOSED'},
+  {sr:46,grp:'eew', irid:'IRID 32', desc:'Rep. Qualification WPS — G28 failed on pipe 45650-00201-0001',close:'12.08.2025',punch:'N/A',status:'CLOSED'},
+  {sr:48,grp:'eew', irid:'IRID 82', desc:'ASTM G28 Item 100 — pipes 03, 05 & 06 failed corrosion test',close:'01.09.2025',punch:'N/A',status:'CLOSED'},
+  {sr:49,grp:'eew', irid:'IRID 31', desc:'MPQT — pipe with slag inclusion identified',close:'via NCR',punch:'—',status:'CLOSED'},
+  {sr:50,grp:'eew', irid:'IRID 34', desc:'MPQT Item 00801 — awaiting new NFI for qualification',close:'03.11.2025',punch:'N/A',status:'CLOSED'},
+  {sr:51,grp:'eew', irid:'IRID 33', desc:'SAIPEM NCR — closed 10.07.2025',close:'10.07.2025',punch:'N/A',status:'CLOSED'},
+  {sr:52,grp:'eew', irid:'IRID 35', desc:'Test coupons cut from one pipe end only — non-compliant sampling',close:'09.10.2025',punch:'N/A',status:'CLOSED'},
+  {sr:53,grp:'eew', irid:'IRID 36', desc:'MPFB/Cladded pipes — EEW to ship pipes with plug fittings before IRN issuance',close:'30.07.2025',punch:'N/A',status:'CLOSED'},
+  {sr:54,grp:'eew', irid:'IRID 36', desc:'MPFB — pipe 45650-4010-0018 fell from crane',close:'via NCR',punch:'—',status:'CLOSED'},
+  {sr:56,grp:'eew', irid:'IRID 39', desc:'Plates arriving with oversized width from VAGB',close:'—',punch:'N/A',status:'CLOSED'},
+  {sr:58,grp:'eew', irid:'IRID 42', desc:'AUT recalibration required for larger weld dimensions on 28″ pipes',close:'10.09.2025',punch:'N/A',status:'CLOSED'},
+  {sr:59,grp:'eew', irid:'IRID Various',desc:'OD machining of 28″ pipes — dimensional deviation',close:'25.09.2025',punch:'N/A',status:'CLOSED'},
+  {sr:65,grp:'eew', irid:'IRID 46', desc:'NOI #141 at Zentrallabor — tensile test failure on production pipes',close:'via WSR',punch:'45650-QC-005',status:'CLOSED'},
+  {sr:68,grp:'eew', irid:'IRID 48', desc:'EEW internal NCR 45650-QC-009 (23.10.2025)',close:'—',punch:'N/A',status:'CLOSED'},
+  {sr:69,grp:'eew', irid:'IRID 49', desc:'NMI statement — pipe 45650-00400-1106',close:'20.10.2025',punch:'N/A',status:'CLOSED'},
+  {sr:72,grp:'eew', irid:'IRID 050',desc:'MPQT Item 300 — pipe 301-004 weld burn-through, second attempt',close:'11.02.2026',punch:'N/A',status:'CLOSED'},
+  {sr:74,grp:'eew', irid:'IRID 051',desc:'MPQT testing session (12.11.2025)',close:'—',punch:'N/A',status:'CLOSED'},
+  {sr:75,grp:'eew', irid:'IRID 053',desc:'Item 400 pipe 724 — non-conformance per ITP',close:'—',punch:'N/A',status:'CLOSED'},
+  {sr:77,grp:'eew', irid:'IRID 054',desc:'DWTT failure — shear area below min. 75%/85%',close:'—',punch:'N/A',status:'CLOSED'},
+  {sr:78,grp:'eew', irid:'IRID 055',desc:'Length discrepancy on two pipes (Item 400-324)',close:'—',punch:'N/A',status:'CLOSED'},
+  {sr:79,grp:'eew', irid:'IRID 055',desc:'Pipe 217 below minimum required length 11.90 m (actual: 11.780 m)',close:'02.02.2026',punch:'N/A',status:'CLOSED'},
+  {sr:80,grp:'eew', irid:'IRID 055',desc:'Pipes 24 and 26 below minimum required length 11.90 m',close:'02.02.2026',punch:'N/A',status:'CLOSED'},
+  {sr:81,grp:'eew', irid:'IRID 058',desc:'ZLS tests cancelled — tensile and Charpy failure on sample',close:'28.01.2026',punch:'N/A',status:'CLOSED'},
+  {sr:83,grp:'eew', irid:'IRID 060',desc:'NOI 154 Rev.01 — testing at Gövert GmbH Essen',close:'—',punch:'N/A',status:'CLOSED'},
+  {sr:84,grp:'eew', irid:'IRID 061',desc:'MPQT specimen N0927 — anomaly at 20× micrographic examination',close:'—',punch:'N/A',status:'CLOSED'},
+  {sr:85,grp:'eew', irid:'IRID 061',desc:'MPQT 301 second session — pipe 301-0003 Charpy failure',close:'06.02.2026',punch:'N/A',status:'CLOSED'},
+  {sr:86,grp:'eew', irid:'IRID 062',desc:'MPQT 301 second session — pipe 301-0003 CTOD test failure',close:'26.02.2026',punch:'N/A',status:'CLOSED'},
+  {sr:87,grp:'eew', irid:'IRID 064',desc:'DWTT failed on 24.02.2026 at Gövert Laboratory',close:'—',punch:'N/A',status:'CLOSED'}
+];
+
+/* Render static data immediately on page load */
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function(){ renderPunchList(PL_STATIC); }, 300);
+});
+
+
 /* ══ GOOGLE APPS SCRIPT ENDPOINT ══
    Paste your GAS Web App URL below after deploying the script.
    Leave empty to disable live sync (dashboard shows static values).
 */
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbxA-rjcLLf_QZxWuQEpy5G9yXgKh-NT9ebD9Qjk7vg9QyEq17Rx7kTSyrh99WgcwWLn/exec';
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbxdppQiPapHwe00kVcMhRJL6P931OiaDIc3ZEBCVRLyynkYqTjZN-sL0gDBWrCFKYTm/exec';
 
 var _syncOk = null;  /* null=never tried, true=ok, false=error */
 
@@ -3172,10 +3341,19 @@ function applyKPIJson(d) {
     document.querySelectorAll('.gauge-fill').forEach(function(el){ el.style.width=pct.toFixed(1)+'%'; });
   }
   if(!isNaN(nos)) {
-    var ns=String(Math.round(nos)), pn=String(4502-Math.round(nos));
+    var nosR = Math.round(nos);
+    var ns   = String(nosR);
+    var pn   = String(4502 - nosR);
     setOv('voest-nos',ns); setOv('voest-nos2',ns); setOv('voest-nos3',ns);
     setOv('voest-pending-nos',pn); setOv('voest-pending2',pn);
+    setOv('voest-outstanding',  pn);
+    setOv('voest-outstanding2', pn);
   }
+}
+
+function applyPunchJson(items) {
+  if (!items || !items.length) return;
+  renderPunchList(items);
 }
 
 async function loadSheetData() {
@@ -3193,7 +3371,10 @@ async function loadSheetData() {
     }
     var data = JSON.parse(text);
     if (data.error) throw new Error(data.error);
-    applyKPIJson(data);
+    /* data.kpi = KPI values, data.punch = punch list array */
+    if (data.kpi) applyKPIJson(data.kpi);
+    else applyKPIJson(data); /* backwards compat */
+    if (data.punch && data.punch.length) applyPunchJson(data.punch);
     var now = new Date();
     setSyncState(true, now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}));
   } catch(e) { setSyncState(false, e.message.slice(0,40)); }

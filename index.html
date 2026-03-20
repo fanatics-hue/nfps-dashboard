@@ -144,7 +144,7 @@
   /* ── sticky header + nav wrapper ── */
   .dash-sticky {
     position: sticky;
-    top: 32px; /* sits below the 32px ticker bar */
+    top: 56px; /* sits below the 56px two-line band */
     z-index: 100;
     border-radius: 16px 16px 0 0;
     overflow: hidden;
@@ -429,35 +429,47 @@
   .pill-blue { background: rgba(0,180,216,0.12); color: #00b4d8; border: 1px solid rgba(0,180,216,0.25); }
   .pill-amb { background: rgba(244,162,97,0.15); color: #f4a261; border: 1px solid rgba(244,162,97,0.3); }
 
-  /* ── LIVE TICKER BANNER ── */
+  /* ── TWO-LINE HEADER BAND ── */
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.65)} }
-  @keyframes tickScroll { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
 
   #ticker-bar {
     position: sticky; top: 0; z-index: 400;
     background: rgba(2,12,27,0.97);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(0,180,216,0.22);
-    height: 32px;
-    display: flex; align-items: center;
-    padding: 0 14px; gap: 10px;
-    overflow: hidden; font-size: 11px;
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,180,216,0.14);
     font-family: 'Barlow', sans-serif;
+    flex-shrink: 0;
   }
-  .tk-live { color: #00b4d8; font-weight: 700; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; flex-shrink: 0; }
-  .tk-pulse { width: 7px; height: 7px; border-radius: 50%; background: #2ec4b6; animation: pulse 1.4s ease-in-out infinite; flex-shrink: 0; }
-  .tk-div { width: 1px; height: 15px; background: rgba(0,180,216,0.3); flex-shrink: 0; }
-  .ticker-track { flex: 1; overflow: hidden; height: 100%; display: flex; align-items: center; }
-  .ticker-inner { display: flex; gap: 0; white-space: nowrap; animation: tickScroll 35s linear infinite; }
-  .ticker-inner:hover { animation-play-state: paused; }
-  .tk-item { display: inline-flex; align-items: center; gap: 5px; padding: 0 18px; color: rgba(200,216,232,0.8); }
-  .tk-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .tb-top {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 6px 20px 5px; gap: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+  }
+  .tb-project {
+    font-size: 11px; font-weight: 600;
+    color: rgba(255,255,255,0.75); letter-spacing: 0.2px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .tb-project em { color: rgba(0,180,216,0.55); font-style: normal; font-weight: 400; margin: 0 5px; }
+  .tb-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .tb-pulse { width: 6px; height: 6px; border-radius: 50%; background: #2ec4b6; animation: pulse 1.4s ease-in-out infinite; }
+  .tb-live { font-size: 10px; font-weight: 700; color: #00b4d8; letter-spacing: 1px; text-transform: uppercase; }
+  .tb-clock { font-size: 11px; font-weight: 600; color: #00b4d8; font-variant-numeric: tabular-nums; min-width: 52px; text-align: right; }
+  .tb-bottom {
+    display: flex; align-items: center;
+    padding: 5px 0 5px;
+  }
+  .tb-kpi {
+    display: flex; align-items: baseline; gap: 5px;
+    flex: 1; padding: 0 14px;
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+  .tb-kpi:first-child { padding-left: 20px; }
+  .tb-kpi:last-child  { border-right: none; }
+  .tb-lbl { font-size: 10px; color: rgba(200,216,232,0.35); white-space: nowrap; }
+  .tb-val { font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .tb-extra { font-size: 10px; color: rgba(200,216,232,0.28); white-space: nowrap; margin-left: 1px; }
   .tk-val { font-weight: 700; }
-  .tk-item.ok  .tk-dot{background:#2ec4b6} .tk-item.ok  .tk-val{color:#2ec4b6}
-  .tk-item.warn .tk-dot{background:#f4a261} .tk-item.warn .tk-val{color:#f4a261}
-  .tk-item.alert .tk-dot{background:#e76f51} .tk-item.alert .tk-val{color:#e76f51}
-  .tk-item.blue .tk-dot{background:#00b4d8} .tk-item.blue .tk-val{color:#00b4d8}
-  .tk-sep { color: rgba(0,180,216,0.3); font-size: 8px; padding: 0 2px; }
 
   /* ── THEME PICKER DROPDOWN ── */
   #theme-picker {
@@ -799,7 +811,7 @@
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
 
     /* hide UI chrome */
-    #ticker-bar, #print-btn, .xf-panel, .xf-arrow,
+    #ticker-bar, #print-btn, .xf-panel, .xf-arrow, .tb-top, .tb-bottom,
     .login-screen, .nav, #login-screen { display: none !important; }
 
     /* reset sticky/fixed positioning */
@@ -1109,26 +1121,43 @@
 
 <!-- ── LIVE TICKER BAR ── -->
 <div id="ticker-bar">
-  <span class="tk-live">Live</span>
-  <span class="tk-pulse"></span>
-  <span class="tk-div"></span>
-  <div class="ticker-track">
-    <div class="ticker-inner">
-      <span class="tk-item alert"><span class="tk-dot"></span>VOESTALPINE Plates Supply: <span class="tk-val">61% — 2,746 / 4,502 NOS</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item ok"><span class="tk-dot"></span>Pipes Production Progress — Inspected: <span class="tk-val">29,265 m</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item ok"><span class="tk-dot"></span>Qty Released: <span class="tk-val">26,038 m</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item warn"><span class="tk-dot"></span>Pending: <span class="tk-val">+3,228 m</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item blue"><span class="tk-dot"></span>PO Qty: <span class="tk-val">54,022 m</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item alert"><span class="tk-dot"></span>PO Balance: <span class="tk-val">–27,984 m</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item ok"><span class="tk-dot"></span>Clock: <span class="tk-val" id="live-clock">--:--:--</span></span><span class="tk-sep">◆</span>
-      <!-- duplicate for seamless loop -->
-      <span class="tk-item alert"><span class="tk-dot"></span>VOESTALPINE Plates Supply: <span class="tk-val">61% — 2,746 / 4,502 NOS</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item ok"><span class="tk-dot"></span>Pipes Production Progress — Inspected: <span class="tk-val">29,265 m</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item ok"><span class="tk-dot"></span>Qty Released: <span class="tk-val">26,038 m</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item warn"><span class="tk-dot"></span>Pending: <span class="tk-val">+3,228 m</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item blue"><span class="tk-dot"></span>PO Qty: <span class="tk-val">54,022 m</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item alert"><span class="tk-dot"></span>PO Balance: <span class="tk-val">–27,984 m</span></span><span class="tk-sep">◆</span>
-      <span class="tk-item ok"><span class="tk-dot"></span>Clock: <span class="tk-val">--:--:--</span></span>
+  <!-- Row 1: project title + live clock -->
+  <div class="tb-top">
+    <div class="tb-project">
+      NFPS Offshore Compression Complex<em>|</em>COMP3A/B<em>|</em>EEW COMP3B<em>·</em>SAIPEM PO 1506050 Rev.01 / 1519921 Rev.02
+    </div>
+    <div class="tb-right">
+      <div class="tb-pulse"></div>
+      <div class="tb-live">Live</div>
+      <div class="tb-clock" id="live-clock">--:--:--</div>
+    </div>
+  </div>
+  <!-- Row 2: KPI strip -->
+  <div class="tb-bottom">
+    <div class="tb-kpi">
+      <span class="tb-lbl">VOESTALPINE</span>
+      <span class="tb-val" style="color:#e76f51" data-kpi="voest">61%</span>
+      <span class="tb-extra" data-kpi-extra="voest">2,746 / 4,502 NOS</span>
+    </div>
+    <div class="tb-kpi">
+      <span class="tb-lbl">Inspected</span>
+      <span class="tb-val" style="color:#2ec4b6" data-kpi="insp">29,265 m</span>
+    </div>
+    <div class="tb-kpi">
+      <span class="tb-lbl">Released</span>
+      <span class="tb-val" style="color:#2ec4b6" data-kpi="rel">26,038 m</span>
+    </div>
+    <div class="tb-kpi">
+      <span class="tb-lbl">Pending</span>
+      <span class="tb-val" style="color:#f4a261" data-kpi="pend">+3,228 m</span>
+    </div>
+    <div class="tb-kpi">
+      <span class="tb-lbl">PO Qty</span>
+      <span class="tb-val" style="color:rgba(200,216,232,0.75)" data-kpi="poQty">54,022 m</span>
+    </div>
+    <div class="tb-kpi">
+      <span class="tb-lbl">PO Balance</span>
+      <span class="tb-val" style="color:#e76f51" data-kpi="poBal">–27,984 m</span>
     </div>
   </div>
 </div>
@@ -1667,237 +1696,279 @@ window.addEventListener('load', function() {
     <!-- ── QUALITY & TESTING ── -->
     <div id="tab-quality" class="section">
 
-      <!-- summary KPIs -->
-      <div class="metrics">
-        <div class="metric green"><div class="m-label">Frequency — base metal</div><div class="m-val" style="font-size:16px">1/dim/heat/50</div><div class="m-sub">1 pipe per dimension / CS-heat / 50 pipes</div></div>
-        <div class="metric gold"><div class="m-label">Frequency — HIC</div><div class="m-val" style="font-size:16px">1st 3 heats</div><div class="m-sub">then 1 pipe per 10th CS-heat</div></div>
-        <div class="metric"><div class="m-label">Frequency — corrosion</div><div class="m-val" style="font-size:16px">1st 5 heats</div><div class="m-sub">then 1/WPS/CRA grade/RES batch/25 pipes</div></div>
-        <div class="metric warn"><div class="m-label">Inspection — Step 22</div><div class="m-val" style="font-size:16px">H / W / W / W</div><div class="m-sub">EEW / CPY / TPIA / EPCI</div></div>
+      <!-- ── QUALITY CSS ── -->
+      <style>
+      .qt-kpi-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:18px;}
+      .qt-kpi{background:var(--metric-bg);border:1px solid var(--border);border-radius:10px;padding:12px 14px;position:relative;overflow:hidden;}
+      .qt-kpi::before{content:'';position:absolute;left:0;top:0;width:3px;height:100%;background:var(--acc);}
+      .qt-kpi.green::before{background:var(--ok);}
+      .qt-kpi.amber::before{background:var(--gold);}
+      .qt-kpi.blue::before{background:var(--acc);}
+      .qt-kpi.warn::before{background:var(--warn);}
+      .qt-kpi-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+      .qt-kpi-val{font-family:var(--fc);font-size:17px;font-weight:700;color:var(--text);line-height:1.1;}
+      .qt-kpi-sub{font-size:10px;color:var(--muted);margin-top:3px;}
+
+      .qt-block{background:var(--card-bg);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;backdrop-filter:blur(12px);}
+      .qt-block-hdr{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--border);background:rgba(0,0,0,0.15);}
+      .qt-block-icon{width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+      .qt-block-icon.blue  {background:rgba(0,180,216,0.15);color:#00b4d8;}
+      .qt-block-icon.amber {background:rgba(244,162,97,0.15);color:#f4a261;}
+      .qt-block-icon.green {background:rgba(46,196,182,0.15);color:#2ec4b6;}
+      .qt-block-icon.danger{background:rgba(231,111,81,0.15);color:#e76f51;}
+      .qt-block-name{font-family:var(--fc);font-size:13px;font-weight:700;color:var(--text);letter-spacing:.3px;}
+      .qt-block-tag{font-size:10px;color:var(--muted);margin-left:auto;letter-spacing:.3px;white-space:nowrap;}
+      .qt-block-body{padding:14px 16px;}
+
+      .qt-test-grid{display:flex;flex-direction:column;gap:6px;}
+      .qt-test-row{display:grid;grid-template-columns:190px 1fr auto;gap:10px;align-items:center;padding:8px 10px;border-radius:8px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);}
+      .qt-test-name{font-size:11px;font-weight:600;color:var(--text);}
+      .qt-test-std{font-size:10px;color:var(--muted);margin-top:2px;}
+      .qt-test-detail{font-size:10px;color:var(--td-color);}
+      .qt-badge{font-size:10px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap;}
+      .qt-badge.ok   {background:rgba(46,196,182,0.15);color:#2ec4b6;border:1px solid rgba(46,196,182,0.25);}
+      .qt-badge.warn {background:rgba(244,162,97,0.15);color:#f4a261;border:1px solid rgba(244,162,97,0.25);}
+      .qt-badge.always{background:rgba(0,180,216,0.15);color:#00b4d8;border:1px solid rgba(0,180,216,0.25);}
+      .qt-badge.danger{background:rgba(231,111,81,0.13);color:#e76f51;border:1px solid rgba(231,111,81,0.25);}
+
+      .qt-acc-block{margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+      .qt-acc-label-hdr{font-size:10px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
+      .qt-acc-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;}
+      .qt-acc-lbl{font-size:10px;color:var(--muted);width:140px;flex-shrink:0;}
+      .qt-acc-bar{flex:1;height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;}
+      .qt-acc-fill{height:100%;border-radius:3px;}
+      .qt-acc-val{font-size:10px;font-weight:600;color:var(--text);width:80px;text-align:right;}
+
+      .qt-cert-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;}
+      .qt-cert{border:1px solid var(--border);border-radius:8px;padding:10px 12px;background:rgba(255,255,255,0.02);}
+      .qt-cert-code{font-size:11px;font-weight:700;color:var(--acc);margin-bottom:3px;}
+      .qt-cert-desc{font-size:10px;color:var(--muted);line-height:1.45;}
+
+      .qt-hydro-list{display:flex;flex-direction:column;gap:4px;}
+      .qt-hydro-row{display:grid;grid-template-columns:80px 120px 1fr 100px;gap:8px;align-items:center;padding:6px 8px;border-radius:7px;font-size:11px;}
+      .qt-hydro-row.hdr{background:rgba(0,180,216,0.1);color:var(--acc);font-weight:600;font-size:10px;}
+      .qt-hydro-row:not(.hdr){background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);}
+      .qt-hydro-p{font-weight:700;color:#2ec4b6;}
+      .qt-hydro-bar{height:4px;background:rgba(46,196,182,0.15);border-radius:2px;margin-top:3px;overflow:hidden;}
+      .qt-hydro-fill{height:100%;border-radius:2px;background:#2ec4b6;}
+
+      .qt-badge-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+      </style>
+
+      <!-- ── HEADER DESCRIPTION ── -->
+      <div style="margin-bottom:16px">
+        <div style="font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--acc);margin-bottom:6px;">Quality &amp; Testing — QCP-ITP No. 5129_20-4600015016-00054 Rev.04 (AFC)</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;">Inspection &amp; test plan for CRA clad pipes 24"/28" — EEW Erndtebrück · <strong style="color:var(--text)">Alloy 625 (N06625)</strong> &amp; <strong style="color:var(--text)">Alloy 825 (N08825)</strong> · DNV-ST-F101 / API 5L 46th Ed. · NACE MR0175 / ISO 15156</div>
       </div>
 
-      <!-- Table 5A: Chemical / PMI -->
-      <div class="card">
-        <div class="card-title">Table 5 — Chemical analysis &amp; PMI (Step 22) — base metal &amp; longitudinal weld</div>
-        <div style="overflow-x:auto">
-          <table style="font-size:11px;min-width:900px">
-            <tr style="background:rgba(0,180,216,0.07)">
-              <th>EEW Item</th><th>Client Item</th><th>Description / Size</th><th>TDS</th>
-              <th>Heat analysis CS + CRA (from plate MTC)</th>
-              <th>Product analysis CS (2×/heat, from plate MTC)</th>
-              <th>PMI CRA base metal (OES/BRUKER, pipe)</th>
-              <th>PMI RES weld (OES/BRUKER, 1×/wire batch/50 pipes)</th>
-              <th>PMI RES wire (BRUKER, 1×/batch)</th>
-            </tr>
-            <tr><td>00100 CRA 625</td><td>B.4, B.4-1, B.4-2, B.4-3</td><td>559.2 × 25.4 mm</td><td>9</td><td rowspan="12" style="text-align:center;color:#2ec4b6;vertical-align:middle">1× per heat — to Table 6</td><td rowspan="12" style="text-align:center;color:#2ec4b6;vertical-align:middle">2× per heat from two different plates/pipes — to Table 6</td><td rowspan="12" style="text-align:center;color:#2ec4b6;vertical-align:middle">1× per heat / 50 pipes — to Table 6</td><td rowspan="4" style="vertical-align:middle;font-size:10px">WPS 2A (ERNiCrMo-3) — 1×/wire batch/50 pipes</td><td rowspan="12" style="text-align:center;color:#2ec4b6;vertical-align:middle">1× per batch number</td></tr>
-            <tr><td>00200 CRA 625</td><td>B.5</td><td>559.2 × 34.9 mm</td><td>10</td></tr>
-            <tr><td>00300 CRA 625</td><td>B.6</td><td>559.2 × 34.9 mm</td><td>11</td></tr>
-            <tr><td>00400 CRA 825</td><td>B.7, B.7-1</td><td>654.4 × 25.4 mm</td><td>1</td></tr>
-            <tr><td>00500 CRA 825</td><td>B.8, B.8-1, B.8-2</td><td>654.4 × 30.2 mm</td><td>2</td><td rowspan="4" style="vertical-align:middle;font-size:10px">WPS 2A (ERNiCrMo-3) — 1×/wire batch/50 pipes</td></tr>
-            <tr><td>00600 CRA 625</td><td>B.9, B.9-1, B.9-2</td><td>654.4 × 30.2 mm</td><td>3</td></tr>
-            <tr><td>00700 CRA 625</td><td>B.10</td><td>654.4 × 39.7 mm</td><td>4</td></tr>
-            <tr><td>00800 CRA 625</td><td>B.11</td><td>654.4 × 39.7 mm</td><td>5</td></tr>
-            <tr><td>01000 CRA 625</td><td>B.10–B.18</td><td>559.2 × 29.2 mm</td><td>12</td><td rowspan="4" style="vertical-align:middle;font-size:10px">WPS 2B (ERNiCrMo-3) — 1×/wire batch/50 pipes</td></tr>
-            <tr><td>02000 CRA 625</td><td>B.19–B.26</td><td>559.2 × 29.2 mm</td><td>12</td></tr>
-            <tr><td>03000 CRA 625</td><td>B.27–B.35</td><td>654.4 × 34.1 mm</td><td>6</td></tr>
-            <tr><td>04000 CRA 625</td><td>B.36–B.43</td><td>654.4 × 34.1 mm</td><td>6</td></tr>
-          </table>
+      <!-- ── KPI STRIP ── -->
+      <div class="qt-kpi-strip">
+        <div class="qt-kpi green">
+          <div class="qt-kpi-label">Hydrotest result</div>
+          <div class="qt-kpi-val">100%</div>
+          <div class="qt-kpi-sub">Pass — each pipe · no leakage</div>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:6px">For OES/wet CRA RES product analysis: taken 1 mm below ground flush RES-weld cap layer (1 mm below ID surface of pipe).</div>
-      </div>
-
-      <!-- Table 5B: CS base metal mechanical -->
-      <div class="card">
-        <div class="card-title">Table 5 — CS backing pipe base metal (pipe body) — tensile, CVN, DWTT &amp; bond shear</div>
-        <div style="overflow-x:auto">
-          <table style="font-size:11px;min-width:1050px">
-            <tr style="background:rgba(0,180,216,0.07)">
-              <th>EEW Item</th><th>Client Item</th><th>Size ID×CS-WT [mm]</th><th>TDS</th>
-              <th>Tensile test transverse (RT) — ASTM A370</th>
-              <th>CVN at MDMT (3 spec.) sub-surface 2 mm — ASTM A370</th>
-              <th>CVN at MDMT–10°C (3 spec.) sub-surface 2 mm — ASTM A370</th>
-              <th>DWTT (API RP 5L3) transverse 90° — DNV B.2.7</th>
-              <th>DWTT Transition Curve (5 sets) — DNV B.2.7</th>
-              <th>Bond Shear Strength (3 spec.) ASTM A264 §7.2.1</th>
-              <th>Frequency</th>
-            </tr>
-            <tr>
-              <td>00100 CRA 625</td><td>B.4, B.4-1–B.4-3</td><td>559.2 × 25.4</td><td>9</td>
-              <td rowspan="8" style="vertical-align:middle;font-size:10px;color:#2ec4b6">Rt0.5 = 450–570 MPa<br>Rm = 535–760 MPa<br>Rt0.5/Rm ≤ 0.93<br>A(2") ≥ 20%<br>Stress-strain curve + report</td>
-              <td style="font-size:10px">At MDMT will not be tested if ≥89/67 J met at MDMT–10°C directly</td>
-              <td style="font-size:10px">≥89/67 J @ –20°C &nbsp; SFA ≥85%/75%</td>
-              <td style="font-size:10px">SFA ≥85%/75% @ –10°C (MDMT)</td>
-              <td rowspan="8" style="vertical-align:middle;font-size:10px">2 sets @ –30°C and –17°C + 2 sets depending on results<br>WT≤25.4: full-size / single-sided red. (t=19mm)<br>WT&gt;25.4: single-sided red. (t=19mm)<br><span style="color:#f4a261">1 pipe/dim/every 10th CS-heat</span></td>
-              <td rowspan="12" style="vertical-align:middle;text-align:center;color:#2ec4b6">≥225 MPa</td>
-              <td rowspan="12" style="vertical-align:middle;text-align:center;color:#f4a261;font-size:10px">1 pipe per dimension / CS-heat / 50 pipes</td>
-            </tr>
-            <tr><td>00200 CRA 625</td><td>B.5</td><td>559.2 × 34.9</td><td>10</td><td style="font-size:10px">At MDMT will not be tested if ≥89/67 J met directly</td><td style="font-size:10px">≥89/67 J @ –20°C &nbsp; SFA ≥85%/75%</td><td style="font-size:10px">SFA ≥85%/75% @ –17°C (t=19mm)</td></tr>
-            <tr><td>00300 CRA 625</td><td>B.6</td><td>559.2 × 34.9</td><td>11</td><td style="font-size:10px">≥45/38 J @ –29°C &nbsp; SFA ≥85%/75%</td><td>N/A</td><td style="font-size:10px">SFA ≥85%/75% @ –17°C (t=19mm)</td></tr>
-            <tr><td>00400 CRA 825</td><td>B.7, B.7-1</td><td>654.4 × 25.4</td><td>1</td><td style="font-size:10px">At MDMT will not be tested if ≥89/67 J met at –10°C directly</td><td style="font-size:10px">≥89/67 J @ –10°C &nbsp; SFA ≥85%/75%</td><td style="font-size:10px">SFA ≥85%/75% @ MDMT=0°C</td></tr>
-            <tr><td>00500 CRA 825</td><td>B.8, B.8-1, B.8-2</td><td>654.4 × 30.2</td><td>2</td><td style="font-size:10px">At MDMT will not be tested if ≥89/67 J met directly</td><td style="font-size:10px">≥89/67 J @ –20°C &nbsp; SFA ≥85%/75%</td><td style="font-size:10px">SFA ≥85%/75% @ –17°C (t=19mm)</td></tr>
-            <tr><td>00600 CRA 625</td><td>B.9, B.9-1, B.9-2</td><td>654.4 × 30.2</td><td>3</td><td style="font-size:10px">At MDMT will not be tested if ≥89/67 J met directly</td><td style="font-size:10px">≥89/67 J @ –20°C &nbsp; SFA ≥85%/75%</td><td style="font-size:10px">SFA ≥85%/75% @ –17°C (t=19mm)</td></tr>
-            <tr><td>00700 CRA 625</td><td>B.10</td><td>654.4 × 39.7</td><td>4</td><td style="font-size:10px">At MDMT will not be tested if ≥89/67 J met directly</td><td style="font-size:10px">≥89/67 J @ –20°C &nbsp; SFA ≥85%/75%</td><td style="font-size:10px">SFA ≥85%/75% @ –17°C (t=19mm)</td></tr>
-            <tr><td>00800 CRA 625</td><td>B.11</td><td>654.4 × 39.7</td><td>5</td><td style="font-size:10px">≥45/38 J @ –29°C &nbsp; SFA ≥85%/75%</td><td>N/A</td><td style="font-size:10px">SFA ≥85%/75% @ –17°C (t=19mm)</td></tr>
-            <tr><td>01000 CRA 625</td><td>B.10–B.18</td><td>559.2 × 29.2</td><td>12</td><td colspan="2" style="font-size:10px">N/A (tensile at MDMT)</td><td style="font-size:10px">≥45/38 J @ –20°C &nbsp; SFA ≥85%/75%</td><td rowspan="4" style="text-align:center;vertical-align:middle;font-size:10px">N/A</td></tr>
-            <tr><td>02000 CRA 625</td><td>B.19–B.26</td><td>559.2 × 29.2</td><td>12</td><td colspan="2" style="font-size:10px">N/A</td><td style="font-size:10px">≥45/38 J @ –20°C &nbsp; SFA ≥85%/75%</td></tr>
-            <tr><td>03000 CRA 625</td><td>B.27–B.35</td><td>654.4 × 34.1</td><td>6</td><td colspan="2" style="font-size:10px">N/A</td><td style="font-size:10px">≥45/38 J @ –20°C &nbsp; SFA ≥85%/75%</td></tr>
-            <tr><td>04000 CRA 625</td><td>B.36–B.43</td><td>654.4 × 34.1</td><td>6</td><td colspan="2" style="font-size:10px">N/A</td><td style="font-size:10px">≥45/38 J @ –20°C &nbsp; SFA ≥85%/75%</td></tr>
-          </table>
+        <div class="qt-kpi blue">
+          <div class="qt-kpi-label">Bond Shear min.</div>
+          <div class="qt-kpi-val">≥ 225 MPa</div>
+          <div class="qt-kpi-sub">ASTM A264 §7.2.1</div>
         </div>
-      </div>
-
-      <!-- Table 5C: SAW longitudinal weld mechanical -->
-      <div class="card">
-        <div class="card-title">Table 5 — CS SAW longitudinal weld — tensile, guided bend, CVN (weld centre &amp; fusion line)</div>
-        <div style="overflow-x:auto">
-          <table style="font-size:11px;min-width:1100px">
-            <tr style="background:rgba(0,180,216,0.07)">
-              <th>EEW Item</th><th>Client Item</th><th>Size [mm]</th><th>TDS</th>
-              <th>Tensile transverse across weld (RT)</th>
-              <th>Guided bend (1×inside, 1×outside) CRA removed — ASTM A370 / API 5L Fig.8</th>
-              <th>CVN centre of weld 2mm sub-surf. @ MDMT–10°C</th>
-              <th>CVN centre of weld root (WT&gt;25mm) @ MDMT–10°C</th>
-              <th>CVN FL 2mm sub-surf. @ MDMT–10°C</th>
-              <th>CVN FL root (WT&gt;25mm) @ MDMT–10°C</th>
-              <th>CVN FL+2mm 2mm sub-surf. @ MDMT–10°C</th>
-              <th>CVN FL+2mm root (WT&gt;25mm) @ MDMT–10°C</th>
-              <th>Freq.</th>
-            </tr>
-            <tr>
-              <td>00100 CRA 625</td><td>B.4, B.4-1–3</td><td>559.2×25.4</td><td>9</td>
-              <td rowspan="12" style="vertical-align:middle;font-size:10px;color:#2ec4b6">Rm ≥535 MPa<br>stress-strain curve + report</td>
-              <td rowspan="12" style="vertical-align:middle;font-size:10px;color:#2ec4b6">180° (mandrel dia. per DNV B.2.5.4 / API 5L Fig.9)<br>Acc. criteria: DNV 7.2.4.14 / API 5L §9.7</td>
-              <td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">N/A</td>
-              <td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">N/A</td>
-              <td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">N/A</td>
-              <td rowspan="12" style="vertical-align:middle;text-align:center;color:#f4a261;font-size:10px">1 pipe/dim/CS-heat/50 pipes</td>
-            </tr>
-            <tr><td>00200 CRA 625</td><td>B.5</td><td>559.2×34.9</td><td>10</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td></tr>
-            <tr><td>00300 CRA 625</td><td>B.6</td><td>559.2×34.9</td><td>11</td><td style="font-size:10px">≥45/38 J @ –29°C</td><td style="font-size:10px">≥45/38 J @ –29°C</td><td style="font-size:10px">≥45/38 J @ –29°C</td><td style="font-size:10px">≥45/38 J @ –29°C</td><td style="font-size:10px">≥45/38 J @ –29°C</td><td style="font-size:10px">≥45/38 J @ –29°C</td></tr>
-            <tr><td>00400 CRA 825</td><td>B.7, B.7-1</td><td>654.4×25.4</td><td>1</td><td style="font-size:10px">≥45/38 J @ –10°C</td><td style="font-size:10px">N/A</td><td style="font-size:10px">≥45/38 J @ –10°C</td><td style="font-size:10px">N/A</td><td style="font-size:10px">≥45/38 J @ –10°C</td><td style="font-size:10px">N/A</td></tr>
-            <tr><td>00500 CRA 825</td><td>B.8, B.8-1–2</td><td>654.4×30.2</td><td>2</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td></tr>
-            <tr><td>00600 CRA 625</td><td>B.9, B.9-1–2</td><td>654.4×30.2</td><td>3</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td></tr>
-            <tr><td>00700 CRA 625</td><td>B.10</td><td>654.4×39.7</td><td>4</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td></tr>
-            <tr><td>00800 CRA 625</td><td>B.11</td><td>654.4×39.7</td><td>5</td><td style="font-size:10px">≥45/38 J @ –29°C</td><td style="font-size:10px">≥45/38 J @ –29°C</td><td style="font-size:10px">≥45/38 J @ –29°C</td><td style="font-size:10px">≥45/38 J @ –29°C</td><td style="font-size:10px">≥45/38 J @ –29°C</td><td style="font-size:10px">≥45/38 J @ –29°C</td></tr>
-            <tr><td>01000 CRA 625</td><td>B.10–B.18</td><td>559.2×29.2</td><td>12</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td></tr>
-            <tr><td>02000 CRA 625</td><td>B.19–B.26</td><td>559.2×29.2</td><td>12</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td></tr>
-            <tr><td>03000 CRA 625</td><td>B.27–B.35</td><td>654.4×34.1</td><td>6</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td></tr>
-            <tr><td>04000 CRA 625</td><td>B.36–B.43</td><td>654.4×34.1</td><td>6</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td><td style="font-size:10px">≥45/38 J @ –20°C</td></tr>
-          </table>
+        <div class="qt-kpi amber">
+          <div class="qt-kpi-label">Freq. base metal</div>
+          <div class="qt-kpi-val">1/dim/heat/50</div>
+          <div class="qt-kpi-sub">1 pipe per combination</div>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:6px">CVN acceptance: individual min / average min. &nbsp;|&nbsp; FL = Fusion Line &nbsp;|&nbsp; "if not already at –29°C" applies to items 00300 and 00800.</div>
-      </div>
-
-      <!-- Table 5D: HIC + Corrosion + Macro/Micro/Hardness + Bend -->
-      <div class="card">
-        <div class="card-title">Table 5 — HIC, corrosion (IGC/pitting), macro/micro/hardness, side bend &amp; hydrostatic</div>
-        <div style="overflow-x:auto">
-          <table style="font-size:11px;min-width:900px">
-            <tr style="background:rgba(0,180,216,0.07)">
-              <th style="width:100px">Test group</th><th>Standard &amp; method</th><th>Specimen / scope</th><th>Acceptance criteria</th><th>Frequency</th>
-            </tr>
-            <tr>
-              <td style="font-weight:600;color:#f4a261">HIC — CS base metal &amp; SAW weld</td>
-              <td>NACE TM0284 — ISO 15156-2 §B.5 — DNV B.3.3<br>Test Solution A (pH3) — 96 hrs</td>
-              <td>3 specimens per pipe:<br>• Transverse BM 90° to weld<br>• Transverse BM 180° to weld<br>• Transverse across weld</td>
-              <td>CLR ≤ 15% &nbsp; CTR ≤ 5% &nbsp; CSR ≤ 2%<br>(average of 3 faces = 1 specimen)<br>Photos of reportable cracks required</td>
-              <td>1 pipe from each of first 3 CS-heats, then 1 pipe per 10th subsequent CS-heat</td>
-            </tr>
-            <tr>
-              <td style="font-weight:600;color:#f4a261">Corrosion — IGC (CRA body &amp; RES weld)</td>
-              <td>ASTM G28 Method A — 120 hrs<br>Across weld, incl. HAZ &amp; adj. BM, transverse, as-welded<br>After pickling &amp; passivating</td>
-              <td>1 specimen across RES weld + HAZ + adjacent BM</td>
-              <td>Corrosion rate ≤ 36 mpy (≤ 0.914 mm/y)</td>
-              <td rowspan="2">1 pipe from first 5 CRA-heats/WT(CS+CRA)/WPS, then 1 pipe per WPS/CRA grade/RES wire batch/25 pipes (whichever is greater)</td>
-            </tr>
-            <tr>
-              <td style="font-weight:600;color:#f4a261">Pitting — ASTM G48-A (CRA body &amp; RES weld)</td>
-              <td>ASTM G48 Method A — 72 hrs<br>Across weld, incl. HAZ &amp; adj. BM, as-welded<br>After pickling &amp; passivating</td>
-              <td>1 specimen across RES weld + HAZ + adjacent BM</td>
-              <td>Alloy 625: 50°C test temp &nbsp; Weight loss ≤ 4.0 g/m² &amp; no visible pitting at 20×<br>Alloy 825: 22°C test temp &nbsp; Weight loss ≤ 4.0 g/m² &amp; no visible pitting at 20×</td>
-            </tr>
-            <tr>
-              <td style="font-weight:600;color:#00b4d8">Macro cross-section (hardness survey)</td>
-              <td>DNV §B.2.10.3–B.2.10.10 &amp; ISO 5817 Level C</td>
-              <td>1× across weld incl. HAZ + adj. BM, transverse CS+CRA<br>3 traverses: 1 OD, 1 mid-wall, 1 ID + 1 in CRA</td>
-              <td>(L450) BM ≤ ø230 HV10 (single ≤5% ≤240 HV10)<br>SAWL ≤ ø240 HV10 (single ≤245 HV10)<br>CRA BM &amp; RES ≤ 345 HV10<br>High-resolution macrographs required</td>
-              <td rowspan="4">1 pipe from 1 pipe end per dimension / CS-heat / 50 pipes<br>(macro for hardness and for macrographic exam can be 1 specimen, evaluated consecutively)</td>
-            </tr>
-            <tr>
-              <td style="font-weight:600;color:#00b4d8">Macrographic examination</td>
-              <td>DNV §7.2.4.16 + Table D-4 &amp; B.2.10 — ISO 5817 Level C — exam at 5×–10×</td>
-              <td>1× across weld incl. HAZ + adj. BM, transverse CS+CRA</td>
-              <td>Complete fusion / no LOF; undercuts ≤0.4 mm; radial offset ≤1.0 mm; 100% CRA continuity; no cracks; weld centreline deviation ≤3 mm</td>
-            </tr>
-            <tr>
-              <td style="font-weight:600;color:#00b4d8">Metallographic examination (micro)</td>
-              <td>DNV §B.2.10 — CS+CRA transverse</td>
-              <td>1× across weld incl. HAZ + adj. BM, transverse CS+CRA<br>Additional 400× documentation at CS/SAWL and CRA/RES interface</td>
-              <td>No LOF; no lack of bonding at CS/SAWL and CRA/RES interface; microstructure of BM/WM/HAZ; grain boundaries free of significant carbides, nitrides, intermetallic phases</td>
-            </tr>
-            <tr>
-              <td style="font-weight:600;color:#00b4d8">Micro — RES weld CRA longitudinal</td>
-              <td>702-25-PL-SPC-01011 §7.4.8.10 — DNV §C.6.3.17</td>
-              <td>1× RES weld CRA, longitudinal section</td>
-              <td>Microstructure of CRA RES weld; grain boundaries free of detrimental or intermetallic phases affecting corrosion properties; high-res micrographs required</td>
-            </tr>
-            <tr>
-              <td style="font-weight:600;color:#2ec4b6">Side bend test (2 specimens)</td>
-              <td>DNV §B.2.5.14 + 7.4.7.5 — t=10 mm across weld, transverse, full cross-section with CRA (RES)</td>
-              <td>2× side bend, t=10 mm, across weld, transverse, full cross-section with CRA (RES)</td>
-              <td>Bent to 180° — former diameter = 5× specimen thickness<br>No open defects &gt;3 mm; minor ductile tears &lt;6 mm at specimen edge (if not associated with obvious defects) disregarded</td>
-              <td>1 pipe per dimension / CS-heat / 50 pipes</td>
-            </tr>
-            <tr>
-              <td style="font-weight:600;color:#2ec4b6">Hydrostatic pressure test</td>
-              <td>DNV-ST-F101 / API 5L — Po = [k×(((2×t_min)/(D–t_min))×SMYS×0.96; SMTS×0.84)] — k=1.00<br>API 5L: P = 2St/D (MPa)</td>
-              <td>Each pipe — 100%</td>
-              <td>No leakage; no pressure drop — Holding time ≥15 sec after stabilisation<br>Cl⁻ &lt;50 ppm (N08825) / &lt;100 ppm (N06625)</td>
-              <td>100% (each pipe)</td>
-            </tr>
-          </table>
+        <div class="qt-kpi blue">
+          <div class="qt-kpi-label">Step ITP — Chem/PMI</div>
+          <div class="qt-kpi-val">Step 22</div>
+          <div class="qt-kpi-sub">EEW·H / CPY·W / TPIA·W / EPCI·W</div>
         </div>
       </div>
 
-      <!-- Table 3: Hydrostatic test pressures -->
-      <div class="card">
-        <div class="card-title">Table 3 — Hydrostatic test pressures per EEW item</div>
-        <div style="overflow-x:auto">
-          <table style="font-size:11px;min-width:700px">
-            <tr style="background:rgba(0,180,216,0.07)">
-              <th>EEW Item</th><th>Client Item</th><th>Description</th><th>TDS</th><th>OD nom. [mm]</th><th>CS-WT min. [mm]</th><th>Test Pressure [MPa]</th><th>Pipe grade</th>
-            </tr>
-            <tr><td>00100</td><td>B.4, B.4-1–3</td><td>24" Riser / Spool / Topside</td><td>9</td><td>616.0</td><td>24.4</td><td style="font-weight:700;color:#2ec4b6">35.6</td><td>DNV MWPL 450Q SFD C N06625</td></tr>
-            <tr><td>00200</td><td>B.5</td><td>24" Riser at Splashzone</td><td>10</td><td>641.0</td><td>33.9</td><td style="font-weight:700;color:#2ec4b6">48.3</td><td>DNV MWPL 450Q SFD C N06625</td></tr>
-            <tr><td>00300</td><td>B.6</td><td>24" Topside Pipe</td><td>11</td><td>641.0</td><td>34.9</td><td style="font-weight:700;color:#2ec4b6">46.6</td><td>API 5L X65QS PSL 2 N06625</td></tr>
-            <tr><td>00400</td><td>B.7, B.7-1</td><td>28" Offshore Intrafield Pipeline (LC1)</td><td>1</td><td>711.2</td><td>24.4</td><td style="font-weight:700;color:#2ec4b6">30.7</td><td>DNV MWPL 450M SFD C N08825</td></tr>
-            <tr><td>00500</td><td>B.8, B.8-1–2</td><td>28" Offshore Intrafield Pipeline (LC2)</td><td>2</td><td>720.8</td><td>29.2</td><td style="font-weight:700;color:#2ec4b6">36.5</td><td>DNV MWPL 450M SFD C N08825</td></tr>
-            <tr><td>00600</td><td>B.9, B.9-1–2</td><td>28" Riser / Spool / Topside</td><td>3</td><td>720.8</td><td>29.2</td><td style="font-weight:700;color:#2ec4b6">36.5</td><td>DNV MWPL 450Q SFD C N06625</td></tr>
-            <tr><td>00700</td><td>B.10</td><td>28" Riser at Splashzone</td><td>4</td><td>745.8</td><td>38.7</td><td style="font-weight:700;color:#2ec4b6">47.3</td><td>DNV MWPL 450Q SFD C N06625</td></tr>
-            <tr><td>00800</td><td>B.11</td><td>28" Topside Pipe</td><td>5</td><td>731.2</td><td>39.7</td><td style="font-weight:700;color:#2ec4b6">46.4</td><td>API 5L X65QS PSL 2 N06625</td></tr>
-            <tr><td>01000</td><td>B.10–B.18</td><td>24" Mother Pipe for 5D Bends</td><td>12</td><td>624.6</td><td>29.2</td><td style="font-weight:700;color:#2ec4b6">42.4</td><td>DNV MWPL 450Q SD C N06625</td></tr>
-            <tr><td>02000</td><td>B.19–B.26</td><td>24" Mother Pipe for 3D Bends</td><td>12</td><td>624.6</td><td>29.2</td><td style="font-weight:700;color:#2ec4b6">42.4</td><td>DNV MWPL 450Q SD C N06625</td></tr>
-            <tr><td>03000</td><td>B.27–B.35</td><td>28" Mother Pipe for 5D Bends</td><td>6</td><td>729.6</td><td>34.1</td><td style="font-weight:700;color:#2ec4b6">42.4</td><td>DNV MWPL 450Q SD C N06625</td></tr>
-            <tr><td>04000</td><td>B.36–B.43</td><td>28" Mother Pipe for 3D Bends</td><td>6</td><td>729.6</td><td>34.1</td><td style="font-weight:700;color:#2ec4b6">42.4</td><td>DNV MWPL 450Q SD C N06625</td></tr>
-          </table>
+      <!-- ── BLOCK 1: Chemical & PMI ── -->
+      <div class="qt-block">
+        <div class="qt-block-hdr">
+          <div class="qt-block-icon blue">⚗</div>
+          <div class="qt-block-name">Chemical Analysis &amp; PMI — Base metal &amp; longit. weld</div>
+          <div class="qt-block-tag">Step 22 · H / W / W / W</div>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:6px">Test pressure calculated without end load compensation. Topside pipes (00300, 00800) calculated per API 5L 46th ed.</div>
+        <div class="qt-block-body">
+          <div class="qt-test-grid">
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">Heat analysis CS+CRA</div><div class="qt-test-std">From plate MTC — each heat</div></div>
+              <div class="qt-test-detail">1× per heat → Table 6 · CS + CRA both</div>
+              <span class="qt-badge warn">1×/heat</span>
+            </div>
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">Product analysis CS</div><div class="qt-test-std">From plate MTC — 2 specimens/heat</div></div>
+              <div class="qt-test-detail">2× per heat from two different plates/pipes → Table 6</div>
+              <span class="qt-badge warn">2×/heat</span>
+            </div>
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">PMI CRA base metal</div><div class="qt-test-std">OES/BRUKER — on pipe</div></div>
+              <div class="qt-test-detail">1× per heat / 50 pipes → Table 6 · 1 mm below ID surface</div>
+              <span class="qt-badge warn">1×/heat/50</span>
+            </div>
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">PMI RES weld</div><div class="qt-test-std">OES/BRUKER — WPS 2A (ERNiCrMo-3)</div></div>
+              <div class="qt-test-detail">1× per wire batch / 50 pipes · WPS 2A and 2B separate</div>
+              <span class="qt-badge warn">1×/batch/50</span>
+            </div>
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">PMI RES wire</div><div class="qt-test-std">BRUKER — every wire batch</div></div>
+              <div class="qt-test-detail">1× per batch number · wire composition check</div>
+              <span class="qt-badge warn">1×/batch</span>
+            </div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">For OES/wet CRA RES product analysis: taken 1 mm below ground flush RES-weld cap layer (1 mm below ID surface).</div>
+        </div>
       </div>
 
-      <!-- Certifications -->
-      <div class="card">
-        <div class="card-title">Certifications &amp; approvals</div>
-        <div class="std-row">
-          <div class="std-item"><div class="std-code">DNV Type Appr.</div><div class="std-desc">EEW Pipe holds DNV type approval for LSAW pipe production including CRA clad systems under DNV-ST-F101.</div></div>
-          <div class="std-item"><div class="std-code">ISO 9001:2015</div><div class="std-desc">Quality management system certification covering pipe manufacturing, testing and documentation.</div></div>
-          <div class="std-item"><div class="std-code">PED 2014/68/EU</div><div class="std-desc">Pressure Equipment Directive compliance for offshore pressure-containing components.</div></div>
-          <div class="std-item"><div class="std-code">NACE MR0175</div><div class="std-desc">Sour service materials qualification — CRA overlay and base metal. Critical for H₂S-containing North Field gas.</div></div>
-          <div class="std-item"><div class="std-code">EN ISO 3183</div><div class="std-desc">Steel pipe for pipeline transportation systems — supplementary requirements alongside API 5L.</div></div>
-          <div class="std-item"><div class="std-code">MTC EN 10204-3.2</div><div class="std-desc">Material Test Certificate issued by EEW PPE (EN 10204-3.1) endorsed to 3.2 by nominated TPIA upon satisfactory inspection and complete documentation.</div></div>
+      <!-- ── BLOCK 2: Mechanical ── -->
+      <div class="qt-block">
+        <div class="qt-block-hdr">
+          <div class="qt-block-icon green">⚙</div>
+          <div class="qt-block-name">Mechanical — CS base metal (pipe body) &amp; SAW longit. weld</div>
+          <div class="qt-block-tag">Tensile · CVN · DWTT · Bond Shear · Guided Bend</div>
+        </div>
+        <div class="qt-block-body">
+          <div class="qt-acc-block" style="margin-top:0;padding-top:0;border-top:none;">
+            <div class="qt-acc-label-hdr">Acceptance criteria — Tensile transverse (RT) · ASTM A370</div>
+            <div class="qt-acc-row">
+              <div class="qt-acc-lbl">Rt0.5 (SMYS)</div>
+              <div class="qt-acc-bar"><div class="qt-acc-fill" style="width:65%;background:#00b4d8;"></div></div>
+              <div class="qt-acc-val">450 – 570 MPa</div>
+            </div>
+            <div class="qt-acc-row">
+              <div class="qt-acc-lbl">Rm (UTS)</div>
+              <div class="qt-acc-bar"><div class="qt-acc-fill" style="width:78%;background:#2ec4b6;"></div></div>
+              <div class="qt-acc-val">535 – 760 MPa</div>
+            </div>
+            <div class="qt-acc-row">
+              <div class="qt-acc-lbl">Rt0.5 / Rm ratio</div>
+              <div class="qt-acc-bar"><div class="qt-acc-fill" style="width:93%;background:#f4a261;"></div></div>
+              <div class="qt-acc-val">≤ 0.93</div>
+            </div>
+            <div class="qt-acc-row">
+              <div class="qt-acc-lbl">Elongation A(2")</div>
+              <div class="qt-acc-bar"><div class="qt-acc-fill" style="width:40%;background:#2ec4b6;"></div></div>
+              <div class="qt-acc-val">≥ 20%</div>
+            </div>
+            <div class="qt-acc-row">
+              <div class="qt-acc-lbl">Bond Shear</div>
+              <div class="qt-acc-bar"><div class="qt-acc-fill" style="width:55%;background:#00b4d8;"></div></div>
+              <div class="qt-acc-val">≥ 225 MPa</div>
+            </div>
+          </div>
+          <div class="qt-badge-row">
+            <span class="qt-badge ok">CVN ≥ 89/67 J @ MDMT–10°C (3 spec.)</span>
+            <span class="qt-badge ok">DWTT SFA ≥ 85%/75%</span>
+            <span class="qt-badge ok">SAW Rm ≥ 535 MPa · Guided bend 180°</span>
+            <span class="qt-badge ok">CVN SAW 6 posizioni @ MDMT–10°C</span>
+            <span class="qt-badge warn">Freq: 1 pipe/dim/CS-heat/50 pipes</span>
+            <span class="qt-badge warn">ASTM A370 · API RP 5L3 · DNV B.2.7</span>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">DWTT — WT≤25.4mm: full-size / single-sided red. (t=19mm) · WT&gt;25.4mm: single-sided reduced (t=19mm) · 1 pipe/dim/every 10th CS-heat · Stress-strain curve + report required on all tensile tests.</div>
+        </div>
+      </div>
+
+      <!-- ── BLOCK 3: HIC / Corrosion / Macro/Micro ── -->
+      <div class="qt-block">
+        <div class="qt-block-hdr">
+          <div class="qt-block-icon danger">⚠</div>
+          <div class="qt-block-name">HIC, Corrosion IGC/Pitting &amp; Macro/Micro/Hardness</div>
+          <div class="qt-block-tag">NACE TM0284 · ASTM G28/G48 · DNV B.2.10</div>
+        </div>
+        <div class="qt-block-body">
+          <div class="qt-test-grid">
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">HIC — CS base &amp; SAW weld</div><div class="qt-test-std">NACE TM0284 Sol.A pH3 — 96 h</div></div>
+              <div class="qt-test-detail">CLR ≤ 15% · CTR ≤ 5% · CSR ≤ 2% · 3 spec./pipe: BM 90°, BM 180°, across weld · photos of reportable cracks required</div>
+              <span class="qt-badge warn">1st 3 heats + 1/10th</span>
+            </div>
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">IGC — ASTM G28 Method A</div><div class="qt-test-std">120 h · across RES weld+HAZ+BM</div></div>
+              <div class="qt-test-detail">Corrosion rate ≤ 36 mpy (0.914 mm/y) · after pickling &amp; passivating</div>
+              <span class="qt-badge warn">1st 5 heats + freq.</span>
+            </div>
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">Pitting — ASTM G48 Method A</div><div class="qt-test-std">72 h · 625: 50°C · 825: 22°C</div></div>
+              <div class="qt-test-detail">Weight loss ≤ 4.0 g/m² · no pitting visible at 20× · after pickling &amp; passivating</div>
+              <span class="qt-badge warn">1st 5 heats + freq.</span>
+            </div>
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">Hardness survey — DNV B.2.10</div><div class="qt-test-std">3 traverses OD / mid-wall / ID + CRA</div></div>
+              <div class="qt-test-detail">BM L450 ≤ 230 HV10 (single ≤ 240) · SAWL ≤ 240 HV10 (single ≤ 245) · CRA/RES ≤ 345 HV10 · high-res macrographs required</div>
+              <span class="qt-badge warn">1/dim/heat/50</span>
+            </div>
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">Macrographic exam — ISO 5817 Level C</div><div class="qt-test-std">DNV §7.2.4.16 — 5×–10× magnification</div></div>
+              <div class="qt-test-detail">Complete fusion · undercut ≤ 0.4 mm · radial offset ≤ 1.0 mm · 100% CRA continuity · weld centreline deviation ≤ 3 mm</div>
+              <span class="qt-badge warn">1/dim/heat/50</span>
+            </div>
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">Metallographic micro</div><div class="qt-test-std">DNV B.2.10 · 400× documentation CS/CRA interface</div></div>
+              <div class="qt-test-detail">No LOF · microstructure BM/WM/HAZ · grain boundaries free of carbides/nitrides/intermetallic phases</div>
+              <span class="qt-badge warn">1/dim/heat/50</span>
+            </div>
+            <div class="qt-test-row">
+              <div><div class="qt-test-name">Side bend — 2 specimen</div><div class="qt-test-std">DNV §B.2.5.14 · t=10 mm, 180°</div></div>
+              <div class="qt-test-detail">Across weld · full cross-section with CRA (RES) · no open defects &gt; 3 mm · minor ductile tears &lt; 6 mm at specimen edge disregarded</div>
+              <span class="qt-badge warn">1/dim/heat/50</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BLOCK 4: Hydrotest ── -->
+      <div class="qt-block">
+        <div class="qt-block-hdr">
+          <div class="qt-block-icon blue">💧</div>
+          <div class="qt-block-name">Hydrostatic Test — Pressures per EEW item (Table 3)</div>
+          <div class="qt-block-tag">100% each pipe · ≥ 15 sec · no leakage · no pressure drop</div>
+        </div>
+        <div class="qt-block-body">
+          <div class="qt-hydro-list">
+            <div class="qt-hydro-row hdr">
+              <span>EEW Item</span><span>Client item</span><span>Description</span><span>P test [MPa]</span>
+            </div>
+            <div class="qt-hydro-row"><span>00100</span><span>B.4 · B.4-1–3</span><span>24" Riser / Spool / Topside — 559.2×24.4 mm</span><span class="qt-hydro-p">35.6<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:56%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>00200</span><span>B.5</span><span>24" Riser Splashzone — 641.0×33.9 mm</span><span class="qt-hydro-p">48.3<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:76%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>00300</span><span>B.6</span><span>24" Topside — 641.0×34.9 mm · API 5L X65QS</span><span class="qt-hydro-p">46.6<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:73%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>00400</span><span>B.7 · B.7-1</span><span>28" Offshore Intrafield LC1 — 711.2×24.4 mm</span><span class="qt-hydro-p">30.7<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:48%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>00500</span><span>B.8 · B.8-1–2</span><span>28" Offshore Intrafield LC2 — 720.8×29.2 mm</span><span class="qt-hydro-p">36.5<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:57%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>00600</span><span>B.9 · B.9-1–2</span><span>28" Riser / Spool / Topside — 720.8×29.2 mm</span><span class="qt-hydro-p">36.5<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:57%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>00700</span><span>B.10</span><span>28" Riser Splashzone — 745.8×38.7 mm</span><span class="qt-hydro-p">47.3<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:74%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>00800</span><span>B.11</span><span>28" Topside — 731.2×39.7 mm · API 5L X65QS</span><span class="qt-hydro-p">46.4<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:73%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>01000</span><span>B.10–B.18</span><span>24" Mother pipe for 5D Bends — 624.6×29.2 mm</span><span class="qt-hydro-p">42.4<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:66%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>02000</span><span>B.19–B.26</span><span>24" Mother pipe for 3D Bends — 624.6×29.2 mm</span><span class="qt-hydro-p">42.4<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:66%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>03000</span><span>B.27–B.35</span><span>28" Mother pipe for 5D Bends — 729.6×34.1 mm</span><span class="qt-hydro-p">42.4<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:66%"></div></div></span></div>
+            <div class="qt-hydro-row"><span>04000</span><span>B.36–B.43</span><span>28" Mother pipe for 3D Bends — 729.6×34.1 mm</span><span class="qt-hydro-p">42.4<div class="qt-hydro-bar"><div class="qt-hydro-fill" style="width:66%"></div></div></span></div>
+          </div>
+          <div style="font-size:10px;color:var(--muted);margin-top:10px;padding-top:8px;border-top:1px solid var(--border);">Pressures calculated without end load compensation · P range: 30.7 – 48.3 MPa · Cl⁻ &lt;50 ppm (N08825) / &lt;100 ppm (N06625) · Topside items 00300 &amp; 00800 calculated per API 5L 46th Ed.</div>
+        </div>
+      </div>
+
+      <!-- ── BLOCK 5: Certifications ── -->
+      <div class="qt-block">
+        <div class="qt-block-hdr">
+          <div class="qt-block-icon green">✓</div>
+          <div class="qt-block-name">Certifications &amp; Approvals</div>
+          <div class="qt-block-tag">EEW PPE · DNV · TÜV · NACE</div>
+        </div>
+        <div class="qt-block-body">
+          <div class="qt-cert-grid">
+            <div class="qt-cert"><div class="qt-cert-code">DNV Type Approval</div><div class="qt-cert-desc">EEW LSAW pipe incl. CRA clad systems — DNV-ST-F101</div></div>
+            <div class="qt-cert"><div class="qt-cert-code">ISO 9001:2015</div><div class="qt-cert-desc">Quality management system — manufacturing, testing &amp; documentation</div></div>
+            <div class="qt-cert"><div class="qt-cert-code">PED 2014/68/EU</div><div class="qt-cert-desc">Pressure Equipment Directive — offshore pressure-containing components</div></div>
+            <div class="qt-cert"><div class="qt-cert-code">NACE MR0175 / ISO 15156</div><div class="qt-cert-desc">Sour service materials qualification — CRA overlay &amp; base metal · H₂S North Field gas</div></div>
+            <div class="qt-cert"><div class="qt-cert-code">EN ISO 3183</div><div class="qt-cert-desc">Steel pipe for pipeline transportation — supplementary to API 5L</div></div>
+            <div class="qt-cert"><div class="qt-cert-code">MTC EN 10204-3.2</div><div class="qt-cert-desc">EEW PPE 3.1 → endorsed to 3.2 by nominated TPIA upon satisfactory inspection &amp; complete documentation</div></div>
+          </div>
         </div>
       </div>
 
     </div>
-
     <!-- ── WELDING WPS ── -->
     <div id="tab-challenges" class="section">
 
@@ -2636,8 +2707,6 @@ document.addEventListener('DOMContentLoaded', function() {
   function attachFilters(tbl) {
     var hr = headerRow(tbl);
     if (!hr) return;
-    /* need data rows */
-    if (dataRows(tbl).length === 0) return;
     hr.querySelectorAll('th').forEach(function(th) {
       if (th.hasAttribute('data-xf')) return;
       th.setAttribute('data-xf', '1');
@@ -2648,6 +2717,8 @@ document.addEventListener('DOMContentLoaded', function() {
       th.appendChild(arrow);
       th.addEventListener('click', function(e) {
         e.stopPropagation();
+        /* Check at click time — rows may have been rendered after init */
+        if (dataRows(tbl).length === 0) return;
         if (panel.classList.contains('open') && currentTh === th) closePanel();
         else openPanel(th);
       });
@@ -2659,13 +2730,17 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   window._xfInit = initXFilters;
 
-  /* Run after dynamic tables are rendered — DOMContentLoaded + delay covers poRows & IRN */
+  /* Run multiple times to catch dynamically rendered rows */
   document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(initXFilters, 500);   /* 500ms: after poRows + IRN JS renders */
+    setTimeout(initXFilters, 200);
+    setTimeout(initXFilters, 800);
+    setTimeout(initXFilters, 1500);
   });
 
-  /* Also catch window.load as fallback */
-  window.addEventListener('load', function() { setTimeout(initXFilters, 300); });
+  window.addEventListener('load', function() {
+    setTimeout(initXFilters, 200);
+    setTimeout(initXFilters, 800);
+  });
 
   /* Re-run on nav-btn click (tab switch) */
   document.addEventListener('click', function(e) {

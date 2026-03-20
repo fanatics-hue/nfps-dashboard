@@ -445,15 +445,15 @@
   .tb-pulse { width: 8px; height: 8px; border-radius: 50%; background: #888; animation: pulse 1.4s ease-in-out infinite; flex-shrink: 0; transition: background .4s; }
   .tb-pulse.synced  { background: #2ec4b6; }
   .tb-pulse.error   { background: #e76f51; animation: none; }
-  .tb-sync-wrap { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 4px 11px; flex-shrink: 0; transition: border-color .4s; }
-  .tb-sync-wrap.synced { border-color: rgba(46,196,182,0.35); }
-  .tb-sync-wrap.error  { border-color: rgba(231,111,81,0.35); }
+  .tb-sync-wrap { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 4px 11px; flex-shrink: 0; transition: background .4s, border-color .4s; }
+  .tb-sync-wrap.synced { border-color: rgba(46,196,182,0.5); background: rgba(46,196,182,0.12); }
+  .tb-sync-wrap.error  { border-color: rgba(231,111,81,0.5);  background: rgba(231,111,81,0.10); }
   .tb-live { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; flex-shrink: 0; color: #888; transition: color .4s; }
   .tb-live.synced { color: #2ec4b6; }
   .tb-live.error  { color: #e76f51; }
   .tb-sync-label { font-size: 10px; color: rgba(200,216,232,0.35); transition: color .4s; }
-  .tb-sync-label.synced { color: rgba(46,196,182,0.7); }
-  .tb-sync-label.error  { color: rgba(231,111,81,0.7); }
+  .tb-sync-label.synced { color: rgba(46,196,182,0.8); }
+  .tb-sync-label.error  { color: rgba(231,111,81,0.8); }
   .tb-div   { width: 1px; height: 18px; background: rgba(0,180,216,0.2); flex-shrink: 0; margin: 0 2px; }
   .tb-pill  {
     display: flex; align-items: center; gap: 6px;
@@ -3037,7 +3037,7 @@ async function loadSheetData() {
 
   try {
     var promises = [];
-    if (SHEET_URLS.kpi) promises.push(fetch(SHEET_URLS.kpi).then(function(r){ return r.text(); }));
+    if (SHEET_URLS.kpi) promises.push(fetch(SHEET_URLS.kpi).then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.text(); }));
 
     var results = await Promise.all(promises);
 

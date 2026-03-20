@@ -144,7 +144,7 @@
   /* ── sticky header + nav wrapper ── */
   .dash-sticky {
     position: sticky;
-    top: 56px; /* sits below the 56px two-line band */
+    top: 42px; /* sits below the 42px pill bar */
     z-index: 100;
     border-radius: 16px 16px 0 0;
     overflow: hidden;
@@ -429,7 +429,7 @@
   .pill-blue { background: rgba(0,180,216,0.12); color: #00b4d8; border: 1px solid rgba(0,180,216,0.25); }
   .pill-amb { background: rgba(244,162,97,0.15); color: #f4a261; border: 1px solid rgba(244,162,97,0.3); }
 
-  /* ── TWO-LINE HEADER BAND ── */
+  /* ── KPI PILL ROW HEADER (Option B) ── */
   @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.65)} }
 
   #ticker-bar {
@@ -438,38 +438,36 @@
     backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(0,180,216,0.14);
     font-family: 'Barlow', sans-serif;
+    display: flex; align-items: center;
+    padding: 8px 16px; gap: 8px; flex-wrap: wrap;
     flex-shrink: 0;
   }
-  .tb-top {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 6px 20px 5px; gap: 16px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+  .tb-pulse { width: 8px; height: 8px; border-radius: 50%; background: #888; animation: pulse 1.4s ease-in-out infinite; flex-shrink: 0; transition: background .4s; }
+  .tb-pulse.synced  { background: #2ec4b6; }
+  .tb-pulse.error   { background: #e76f51; animation: none; }
+  .tb-sync-wrap { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 4px 11px; flex-shrink: 0; transition: border-color .4s; }
+  .tb-sync-wrap.synced { border-color: rgba(46,196,182,0.35); }
+  .tb-sync-wrap.error  { border-color: rgba(231,111,81,0.35); }
+  .tb-live { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; text-transform: uppercase; flex-shrink: 0; color: #888; transition: color .4s; }
+  .tb-live.synced { color: #2ec4b6; }
+  .tb-live.error  { color: #e76f51; }
+  .tb-sync-label { font-size: 10px; color: rgba(200,216,232,0.35); transition: color .4s; }
+  .tb-sync-label.synced { color: rgba(46,196,182,0.7); }
+  .tb-sync-label.error  { color: rgba(231,111,81,0.7); }
+  .tb-div   { width: 1px; height: 18px; background: rgba(0,180,216,0.2); flex-shrink: 0; margin: 0 2px; }
+  .tb-pill  {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 8px; padding: 4px 11px;
+    flex-shrink: 0;
   }
-  .tb-project {
-    font-size: 11px; font-weight: 600;
-    color: rgba(255,255,255,0.75); letter-spacing: 0.2px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .tb-project em { color: rgba(0,180,216,0.55); font-style: normal; font-weight: 400; margin: 0 5px; }
-  .tb-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-  .tb-pulse { width: 6px; height: 6px; border-radius: 50%; background: #2ec4b6; animation: pulse 1.4s ease-in-out infinite; }
-  .tb-live { font-size: 10px; font-weight: 700; color: #00b4d8; letter-spacing: 1px; text-transform: uppercase; }
-  .tb-clock { font-size: 11px; font-weight: 600; color: #00b4d8; font-variant-numeric: tabular-nums; min-width: 52px; text-align: right; }
-  .tb-bottom {
-    display: flex; align-items: center;
-    padding: 5px 0 5px;
-  }
-  .tb-kpi {
-    display: flex; align-items: baseline; gap: 5px;
-    flex: 1; padding: 0 14px;
-    border-right: 1px solid rgba(255,255,255,0.05);
-  }
-  .tb-kpi:first-child { padding-left: 20px; }
-  .tb-kpi:last-child  { border-right: none; }
-  .tb-lbl { font-size: 10px; color: rgba(200,216,232,0.35); white-space: nowrap; }
-  .tb-val { font-size: 12px; font-weight: 700; white-space: nowrap; }
-  .tb-extra { font-size: 10px; color: rgba(200,216,232,0.28); white-space: nowrap; margin-left: 1px; }
-  .tk-val { font-weight: 700; }
+  .tb-dot   { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+  .tb-lbl   { font-size: 10px; color: rgba(200,216,232,0.38); white-space: nowrap; }
+  .tb-val   { font-size: 12px; font-weight: 700; white-space: nowrap; }
+  .tb-extra { font-size: 10px; color: rgba(200,216,232,0.28); white-space: nowrap; }
+  .tb-clock { font-size: 11px; font-weight: 600; color: #00b4d8; font-variant-numeric: tabular-nums; margin-left: auto; flex-shrink: 0; }
+  .tk-val   { font-weight: 700; }
 
   /* ── THEME PICKER DROPDOWN ── */
   #theme-picker {
@@ -1121,45 +1119,46 @@
 
 <!-- ── LIVE TICKER BAR ── -->
 <div id="ticker-bar">
-  <!-- Row 1: project title + live clock -->
-  <div class="tb-top">
-    <div class="tb-project">
-      NFPS Offshore Compression Complex<em>|</em>COMP3A/B<em>|</em>EEW COMP3B<em>·</em>SAIPEM PO 1506050 Rev.01 / 1519921 Rev.02
-    </div>
-    <div class="tb-right">
-      <div class="tb-pulse"></div>
-      <div class="tb-live">Live</div>
-      <div class="tb-clock" id="live-clock">--:--:--</div>
-    </div>
+  <div class="tb-sync-wrap" id="sync-wrap">
+    <div class="tb-pulse" id="sync-dot"></div>
+    <span class="tb-live" id="sync-label">Sync</span>
+    <span class="tb-sync-label" id="sync-status"></span>
   </div>
-  <!-- Row 2: KPI strip -->
-  <div class="tb-bottom">
-    <div class="tb-kpi">
-      <span class="tb-lbl">VOESTALPINE</span>
-      <span class="tb-val" style="color:#e76f51" data-kpi="voest">61%</span>
-      <span class="tb-extra" data-kpi-extra="voest">2,746 / 4,502 NOS</span>
-    </div>
-    <div class="tb-kpi">
-      <span class="tb-lbl">Inspected</span>
-      <span class="tb-val" style="color:#2ec4b6" data-kpi="insp">29,265 m</span>
-    </div>
-    <div class="tb-kpi">
-      <span class="tb-lbl">Released</span>
-      <span class="tb-val" style="color:#2ec4b6" data-kpi="rel">26,038 m</span>
-    </div>
-    <div class="tb-kpi">
-      <span class="tb-lbl">Pending</span>
-      <span class="tb-val" style="color:#f4a261" data-kpi="pend">+3,228 m</span>
-    </div>
-    <div class="tb-kpi">
-      <span class="tb-lbl">PO Qty</span>
-      <span class="tb-val" style="color:rgba(200,216,232,0.75)" data-kpi="poQty">54,022 m</span>
-    </div>
-    <div class="tb-kpi">
-      <span class="tb-lbl">PO Balance</span>
-      <span class="tb-val" style="color:#e76f51" data-kpi="poBal">–27,984 m</span>
-    </div>
+  <div class="tb-div"></div>
+  <div class="tb-pill">
+    <div class="tb-dot" style="background:#e76f51"></div>
+    <span class="tb-lbl">VOESTALPINE</span>
+    <span class="tb-val" style="color:#e76f51" data-kpi="voest">61%</span>
+    <span class="tb-extra" data-kpi-extra="voest">2,746 / 4,502 NOS</span>
   </div>
+  <div class="tb-div"></div>
+  <div class="tb-pill">
+    <div class="tb-dot" style="background:#2ec4b6"></div>
+    <span class="tb-lbl">Inspected</span>
+    <span class="tb-val" style="color:#2ec4b6" data-kpi="insp">29,265 m</span>
+  </div>
+  <div class="tb-pill">
+    <div class="tb-dot" style="background:#2ec4b6"></div>
+    <span class="tb-lbl">Released</span>
+    <span class="tb-val" style="color:#2ec4b6" data-kpi="rel">26,038 m</span>
+  </div>
+  <div class="tb-pill">
+    <div class="tb-dot" style="background:#f4a261"></div>
+    <span class="tb-lbl">Pending</span>
+    <span class="tb-val" style="color:#f4a261" data-kpi="pend">+3,228 m</span>
+  </div>
+  <div class="tb-div"></div>
+  <div class="tb-pill">
+    <div class="tb-dot" style="background:rgba(200,216,232,0.4)"></div>
+    <span class="tb-lbl">PO Qty</span>
+    <span class="tb-val" style="color:rgba(200,216,232,0.8)" data-kpi="poQty">54,022 m</span>
+  </div>
+  <div class="tb-pill">
+    <div class="tb-dot" style="background:#e76f51"></div>
+    <span class="tb-lbl">PO Balance</span>
+    <span class="tb-val" style="color:#e76f51" data-kpi="poBal">–27,984 m</span>
+  </div>
+  <div class="tb-clock" id="live-clock">--:--:--</div>
 </div>
 
 <!-- ═══════════════════════════════════
@@ -2993,6 +2992,91 @@ document.addEventListener('click', function(e) {
   if (t && (t.classList.contains('nav-btn') || t.closest('.nav-btn'))) {
     setTimeout(function() { initTilt(); animateBars(); }, 300);
   }
+});
+
+
+/* ══ GOOGLE SHEETS LIVE SYNC ══ */
+var SHEET_URLS = {
+  kpi:  '',   /* paste KPI sheet CSV URL here */
+  po:   '',   /* paste PO_ROWS sheet CSV URL here */
+  irn:  ''    /* paste IRN_ROWS sheet CSV URL here */
+};
+
+var _syncOk = null;  /* null=never tried, true=ok, false=error */
+
+function setSyncState(ok, msg) {
+  var wrap  = document.getElementById('sync-wrap');
+  var dot   = document.getElementById('sync-dot');
+  var label = document.getElementById('sync-label');
+  var status= document.getElementById('sync-status');
+  if (!wrap) return;
+  ['synced','error'].forEach(function(c){ wrap.classList.remove(c); dot.classList.remove(c); label.classList.remove(c); status.classList.remove(c); });
+  if (ok === true)  { wrap.classList.add('synced'); dot.classList.add('synced'); label.classList.add('synced'); status.classList.add('synced'); label.textContent='Synced'; status.textContent = msg||''; }
+  if (ok === false) { wrap.classList.add('error');  dot.classList.add('error');  label.classList.add('error');  status.classList.add('error');  label.textContent='Offline'; status.textContent = msg||'No connection'; }
+  if (ok === null)  { label.textContent='Sync'; status.textContent=''; }
+  _syncOk = ok;
+}
+
+function parseCSVRow(line) {
+  var result = []; var cur = ''; var inQ = false;
+  for (var i=0; i<line.length; i++) {
+    var c = line[i];
+    if (c==='"') { inQ=!inQ; } else if (c===',' && !inQ) { result.push(cur.trim()); cur=''; } else { cur+=c; }
+  }
+  result.push(cur.trim());
+  return result;
+}
+
+function fmtM(n) { return isNaN(n)?'—':Number(n).toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:3})+' m'; }
+function fmtPct(n){ return isNaN(n)?'—':Math.round(Number(n))+'%'; }
+
+function applyKPI(rows) {
+  if (!rows || rows.length < 2) return;
+  var d = parseCSVRow(rows[1]);
+  var map = {
+    insp:  { val: fmtM(d[0]),    el: '[data-kpi="insp"]' },
+    rel:   { val: fmtM(d[1]),    el: '[data-kpi="rel"]'  },
+    pend:  { val: (Number(d[2])>=0?'+':'')+fmtM(d[2]), el: '[data-kpi="pend"]' },
+    poQty: { val: fmtM(d[3]),    el: '[data-kpi="poQty"]'},
+    poBal: { val: fmtM(d[4]),    el: '[data-kpi="poBal"]'},
+    voest: { val: fmtPct(d[5]),  el: '[data-kpi="voest"]'},
+  };
+  Object.keys(map).forEach(function(k) {
+    document.querySelectorAll(map[k].el).forEach(function(el){ if(map[k].val) el.textContent = map[k].val; });
+  });
+  /* extra for VOEST NOS */
+  if (d[6]) document.querySelectorAll('[data-kpi-extra="voest"]').forEach(function(el){ el.textContent = Number(d[6]).toLocaleString('it-IT')+' / 4,502 NOS'; });
+}
+
+async function loadSheetData() {
+  /* If no URLs configured, mark as static (no error shown) */
+  var anyUrl = SHEET_URLS.kpi || SHEET_URLS.po || SHEET_URLS.irn;
+  if (!anyUrl) { setSyncState(null); return; }
+
+  try {
+    var promises = [];
+    if (SHEET_URLS.kpi) promises.push(fetch(SHEET_URLS.kpi).then(function(r){ return r.text(); }));
+
+    var results = await Promise.all(promises);
+
+    if (SHEET_URLS.kpi && results[0]) {
+      var kpiRows = results[0].split('\n');
+      applyKPI(kpiRows);
+    }
+
+    var now = new Date();
+    var dateStr = now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'}) + ' ' + now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
+    setSyncState(true, dateStr);
+
+  } catch(e) {
+    setSyncState(false, 'Connection error');
+  }
+}
+
+/* Initial load + refresh every 5 min */
+window.addEventListener('load', function() {
+  setTimeout(loadSheetData, 1000);
+  setInterval(loadSheetData, 5 * 60 * 1000);
 });
 
 </script>

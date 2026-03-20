@@ -1120,7 +1120,7 @@
 
 <!-- ── LIVE TICKER BAR ── -->
 <div id="ticker-bar">
-  <div class="tb-sync-wrap" id="sync-wrap">
+  <div class="tb-sync-wrap" id="sync-wrap" onclick="if(typeof loadSheetData==='function')loadSheetData();" style="cursor:pointer;" title="Click to sync now">
     <div class="tb-pulse" id="sync-dot"></div>
     <span class="tb-live" id="sync-label">Sync</span>
     <span class="tb-sync-label" id="sync-status"></span>
@@ -2984,7 +2984,7 @@ document.addEventListener('click', function(e) {
 
 /* ══ GOOGLE SHEETS LIVE SYNC ══ */
 var SHEET_URLS = {
-  kpi: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3lRSm7mtBWmT93MwIPFr9ffqahxeJp9b8PEbVpQ4Yct0Yn2EOMoJ8KEBooVsCA2q8zYId1QAxCNBh/pub?gid=1330925926&single=true&output=csv',
+  kpi: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT-U0JMYeUGhU1KsXOnBktB8WWZ8NMfCM_V_Z884xN6Ys-x-JlclAeVZl4c1ZOBvL8N0NuG0jK0QF9f/pub?gid=1842359419&single=true&output=csv',
   po:  'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3lRSm7mtBWmT93MwIPFr9ffqahxeJp9b8PEbVpQ4Yct0Yn2EOMoJ8KEBooVsCA2q8zYId1QAxCNBh/pub?gid=56693583&single=true&output=csv',
   irn: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS3lRSm7mtBWmT93MwIPFr9ffqahxeJp9b8PEbVpQ4Yct0Yn2EOMoJ8KEBooVsCA2q8zYId1QAxCNBh/pub?gid=168560830&single=true&output=csv'
 };
@@ -3032,29 +3032,62 @@ function fmtPct(n){ var v=toNum(n); return isNaN(v)?'—':Math.round(v)+'%'; }
 
 function applyKPI(rawText) {
   var text = Array.isArray(rawText) ? rawText.join('\n') : String(rawText);
-  /* Step 1: collapse quoted cells that contain embedded newlines (e.g. "QTY_INSP\n(m inspected)")
-     These span multiple lines in raw CSV — join them back into one line */
+  /* collapse embedded newlines inside quoted cells */
   text = text.replace(/"[^"]*"/g, function(m){ return m.split('\n').join(' ').split('\r').join(''); });
-  /* Step 2: normalise line endings and split */
+  /* normalise line endings */
   var lines = text.split('\r\n').join('\n').split('\r').join('\n').split('\n')
-                  .map(function(l){return l.trim();}).filter(Boolean);
-  /* Step 3: find first line whose first cell is a pure number (= data row) */
-  var dataLine = null;
+                  .map(function(l){ return l.trim(); }).filter(Boolean);
+
+  /* Find header row: line containing QTY_INSP or similar KPI column name */
+  var headerIdx = -1;
+  var colMap = {};
+  var kpiKeys = ['QTY_INSP','QTY_REL','PENDING','PO_QTY','PO_BAL','VOEST_PCT','VOEST_NOS'];
   for (var i = 0; i < lines.length; i++) {
-    var first = parseCSVRow(lines[i])[0].replace(/"/g,'').trim();
-    if (first !== '' && !isNaN(toNum(first))) { dataLine = lines[i]; break; }
+    var upper = lines[i].toUpperCase();
+    if (upper.indexOf('QTY_INSP') !== -1 || upper.indexOf('QTY_REL') !== -1) {
+      headerIdx = i;
+      var cols = parseCSVRow(lines[i]);
+      for (var c = 0; c < cols.length; c++) {
+        var k = cols[c].replace(/"/g,'').trim().toUpperCase().split('(')[0].split('\n')[0].trim();
+        colMap[k] = c;
+      }
+      break;
+    }
   }
-  if (!dataLine) { console.warn('[NFPS] applyKPI: no data row found'); return; }
+
+  /* Find data row: first row AFTER header whose first numeric cell is a number */
+  var dataLine = null;
+  var startFrom = headerIdx >= 0 ? headerIdx + 1 : 0;
+  for (var j = startFrom; j < lines.length; j++) {
+    var cells = parseCSVRow(lines[j]);
+    /* check if any cell in this row is a valid number > 100 (to skip % values) */
+    var hasNum = false;
+    for (var cc = 0; cc < cells.length; cc++) {
+      var n = toNum(cells[cc]);
+      if (!isNaN(n) && n > 100) { hasNum = true; break; }
+    }
+    if (hasNum) { dataLine = lines[j]; break; }
+  }
+
+  if (!dataLine) { return; }
   var d = parseCSVRow(dataLine);
+
+  /* Map by column index if header was found, else use positional fallback */
+  function col(name, fallback) {
+    var idx = colMap.hasOwnProperty(name) ? colMap[name] : fallback;
+    return d[idx] !== undefined ? d[idx] : '';
+  }
+
   function set(sel,val){ if(!val||val==='—') return; document.querySelectorAll(sel).forEach(function(el){el.textContent=val;}); }
-  var pend = toNum(d[2]);
-  set('[data-kpi="insp"]',  fmtM(d[0]));
-  set('[data-kpi="rel"]',   fmtM(d[1]));
-  set('[data-kpi="pend"]',  (!isNaN(pend)?(pend>=0?'+':''): '')+fmtM(d[2]));
-  set('[data-kpi="poQty"]', fmtM(d[3]));
-  set('[data-kpi="poBal"]', fmtM(d[4]));
-  set('[data-kpi="voest"]', fmtPct(d[5]));
-  var nos=toNum(d[6]); if(!isNaN(nos)) set('[data-kpi-extra="voest"]', nos.toLocaleString('it-IT')+' / 4,502 NOS');
+  var pend = toNum(col('PENDING', 2));
+  set('[data-kpi="insp"]',  fmtM(col('QTY_INSP',0)));
+  set('[data-kpi="rel"]',   fmtM(col('QTY_REL',1)));
+  set('[data-kpi="pend"]',  (!isNaN(pend)?(pend>=0?'+':''): '')+fmtM(col('PENDING',2)));
+  set('[data-kpi="poQty"]', fmtM(col('PO_QTY',3)));
+  set('[data-kpi="poBal"]', fmtM(col('PO_BAL',4)));
+  set('[data-kpi="voest"]', fmtPct(col('VOEST_PCT',5)));
+  var nos = toNum(col('VOEST_NOS',6));
+  if (!isNaN(nos)) set('[data-kpi-extra="voest"]', nos.toLocaleString('it-IT')+' / 4,502 NOS');
 }
 
 
@@ -3062,7 +3095,7 @@ async function loadSheetData() {
   var anyUrl = SHEET_URLS.kpi||SHEET_URLS.po||SHEET_URLS.irn;
   if (!anyUrl) { setSyncState(null); return; }
   try {
-    var r = await fetch(SHEET_URLS.kpi, {mode:'cors',cache:'no-store'});
+    var r = await fetch(SHEET_URLS.kpi + '&t=' + Date.now(), {mode:'cors',cache:'no-store'});
     if (!r.ok) throw new Error('HTTP '+r.status);
     applyKPI(await r.text());
     var now=new Date();

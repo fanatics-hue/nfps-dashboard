@@ -3032,21 +3032,19 @@ function fmtPct(n){ var v=toNum(n); return isNaN(v)?'—':Math.round(v)+'%'; }
 
 function applyKPI(rawText) {
   var text = Array.isArray(rawText) ? rawText.join('\n') : String(rawText);
-  /* normalise line endings, remove blank lines */
+  /* Step 1: collapse quoted cells that contain embedded newlines (e.g. "QTY_INSP\n(m inspected)")
+     These span multiple lines in raw CSV — join them back into one line */
+  text = text.replace(/"[^"]*"/g, function(m){ return m.split('\n').join(' ').split('\r').join(''); });
+  /* Step 2: normalise line endings and split */
   var lines = text.split('\r\n').join('\n').split('\r').join('\n').split('\n')
                   .map(function(l){return l.trim();}).filter(Boolean);
-  /* The Google Sheet CSV has 3 header rows before actual data:
-     row 0: sheet title
-     row 1: instructions
-     row 2: column names  (QTY_INSP, QTY_REL, ...)
-     row 3: data values   <- this is what we need
-     Strategy: find the first row whose FIRST cell is a pure number */
+  /* Step 3: find first line whose first cell is a pure number (= data row) */
   var dataLine = null;
   for (var i = 0; i < lines.length; i++) {
-    var firstCell = parseCSVRow(lines[i])[0].replace(/"/g,'').trim();
-    if (firstCell !== '' && !isNaN(toNum(firstCell))) { dataLine = lines[i]; break; }
+    var first = parseCSVRow(lines[i])[0].replace(/"/g,'').trim();
+    if (first !== '' && !isNaN(toNum(first))) { dataLine = lines[i]; break; }
   }
-  if (!dataLine) return;
+  if (!dataLine) { console.warn('[NFPS] applyKPI: no data row found'); return; }
   var d = parseCSVRow(dataLine);
   function set(sel,val){ if(!val||val==='—') return; document.querySelectorAll(sel).forEach(function(el){el.textContent=val;}); }
   var pend = toNum(d[2]);
@@ -3058,6 +3056,7 @@ function applyKPI(rawText) {
   set('[data-kpi="voest"]', fmtPct(d[5]));
   var nos=toNum(d[6]); if(!isNaN(nos)) set('[data-kpi-extra="voest"]', nos.toLocaleString('it-IT')+' / 4,502 NOS');
 }
+
 
 async function loadSheetData() {
   var anyUrl = SHEET_URLS.kpi||SHEET_URLS.po||SHEET_URLS.irn;

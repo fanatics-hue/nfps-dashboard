@@ -3032,10 +3032,22 @@ function fmtPct(n){ var v=toNum(n); return isNaN(v)?'—':Math.round(v)+'%'; }
 
 function applyKPI(rawText) {
   var text = Array.isArray(rawText) ? rawText.join('\n') : String(rawText);
+  /* normalise line endings, remove blank lines */
   var lines = text.split('\r\n').join('\n').split('\r').join('\n').split('\n')
                   .map(function(l){return l.trim();}).filter(Boolean);
-  if (lines.length < 2) return;
-  var d = parseCSVRow(lines[1]);
+  /* The Google Sheet CSV has 3 header rows before actual data:
+     row 0: sheet title
+     row 1: instructions
+     row 2: column names  (QTY_INSP, QTY_REL, ...)
+     row 3: data values   <- this is what we need
+     Strategy: find the first row whose FIRST cell is a pure number */
+  var dataLine = null;
+  for (var i = 0; i < lines.length; i++) {
+    var firstCell = parseCSVRow(lines[i])[0].replace(/"/g,'').trim();
+    if (firstCell !== '' && !isNaN(toNum(firstCell))) { dataLine = lines[i]; break; }
+  }
+  if (!dataLine) return;
+  var d = parseCSVRow(dataLine);
   function set(sel,val){ if(!val||val==='—') return; document.querySelectorAll(sel).forEach(function(el){el.textContent=val;}); }
   var pend = toNum(d[2]);
   set('[data-kpi="insp"]',  fmtM(d[0]));

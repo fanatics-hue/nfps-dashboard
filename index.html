@@ -1364,7 +1364,7 @@ window.addEventListener('load', function() {
       <button class="nav-btn" onclick="showTab('quality',this)">Quality &amp; Testing</button>
       <button class="nav-btn" onclick="showTab('challenges',this)">Welding WPS</button>
       <button class="nav-btn" onclick="showTab('team',this)">Team</button>
-      <button class="nav-btn" onclick="showTab('conclusions',this)">Conclusions</button>
+      <button class="nav-btn" onclick="showTab('conclusions',this)">EEW Punch List</button>
     </div>
 
     </div><!-- /dash-sticky -->
@@ -3048,6 +3048,12 @@ function renderPunchList(items) {
   setEl('pl-closed', closed);
   setEl('pl-open',   open);
   setEl('pl-rate',   rate);
+  
+  // Change OPEN counter color: green if 0, red if > 0
+  var openEl = document.getElementById('pl-open');
+  if (openEl) {
+    openEl.style.color = (open === 0) ? 'var(--ok)' : 'var(--warn)';
+  }
 
   PL_GROUPS.forEach(function(g) {
     var its = items.filter(function(p){ return p.grp === g.id; });

@@ -3014,54 +3014,49 @@ function parseCSVRow(line) {
   return result;
 }
 
-function fmtM(n) {
-  var v = Number(String(n).replace(',','.'));
-  return isNaN(v)?'—':v.toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:3})+' m';
+/* ── KPI helpers ── */
+function toNum(s) {
+  if (s===null||s===undefined) return NaN;
+  s = String(s).split('\r').join('').replace(/"/g,'').trim();
+  var ld = s.lastIndexOf('.');
+  var lc = s.lastIndexOf(',');
+  if (lc > ld) { s = s.split('.').join('').replace(',','.'); }
+  else          { s = s.split(',').join(''); }
+  return parseFloat(s);
 }
-function fmtPct(n){
-  var v = Number(String(n).replace(',','.'));
-  return isNaN(v)?'—':Math.round(v)+'%';
+function fmtM(n){
+  var v=toNum(n); if(isNaN(v)) return '—';
+  return v.toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:3})+' m';
 }
+function fmtPct(n){ var v=toNum(n); return isNaN(v)?'—':Math.round(v)+'%'; }
 
-function applyKPI(rows) {
-  if (!rows || rows.length < 2) return;
-  /* strip 
-, skip blank lines, skip the header row (first non-empty row with text) */
-  var cleaned = rows.map(function(r){ return r.split('\r').join('').split('\n').join('').trim(); }).filter(Boolean);
-  if (cleaned.length < 2) return;
-  /* cleaned[0] = header (QTY_INSP...), cleaned[1] = data values */
-  var d = parseCSVRow(cleaned[1]).map(function(v){ return v.replace(',','.'); });
-  var map = {
-    insp:  { val: fmtM(d[0]),    el: '[data-kpi="insp"]' },
-    rel:   { val: fmtM(d[1]),    el: '[data-kpi="rel"]'  },
-    pend:  { val: (Number(d[2].replace(',','.'))||0)>=0?'+'+fmtM(d[2]):fmtM(d[2]), el: '[data-kpi="pend"]' },
-    poQty: { val: fmtM(d[3]),    el: '[data-kpi="poQty"]'},
-    poBal: { val: fmtM(d[4]),    el: '[data-kpi="poBal"]'},
-    voest: { val: fmtPct(d[5]),  el: '[data-kpi="voest"]'},
-  };
-  Object.keys(map).forEach(function(k) {
-    document.querySelectorAll(map[k].el).forEach(function(el){ if(map[k].val) el.textContent = map[k].val; });
-  });
-  if (d[6]) {
-    var nos = Number(d[6].replace(',','.'));
-    if (!isNaN(nos)) document.querySelectorAll('[data-kpi-extra="voest"]').forEach(function(el){ el.textContent = nos.toLocaleString('it-IT')+' / 4,502 NOS'; });
-  }
+function applyKPI(rawText) {
+  var text = Array.isArray(rawText) ? rawText.join('\n') : String(rawText);
+  var lines = text.split('\r\n').join('\n').split('\r').join('\n').split('\n')
+                  .map(function(l){return l.trim();}).filter(Boolean);
+  if (lines.length < 2) return;
+  var d = parseCSVRow(lines[1]);
+  function set(sel,val){ if(!val||val==='—') return; document.querySelectorAll(sel).forEach(function(el){el.textContent=val;}); }
+  var pend = toNum(d[2]);
+  set('[data-kpi="insp"]',  fmtM(d[0]));
+  set('[data-kpi="rel"]',   fmtM(d[1]));
+  set('[data-kpi="pend"]',  (!isNaN(pend)?(pend>=0?'+':''): '')+fmtM(d[2]));
+  set('[data-kpi="poQty"]', fmtM(d[3]));
+  set('[data-kpi="poBal"]', fmtM(d[4]));
+  set('[data-kpi="voest"]', fmtPct(d[5]));
+  var nos=toNum(d[6]); if(!isNaN(nos)) set('[data-kpi-extra="voest"]', nos.toLocaleString('it-IT')+' / 4,502 NOS');
 }
 
 async function loadSheetData() {
-  var anyUrl = SHEET_URLS.kpi || SHEET_URLS.po || SHEET_URLS.irn;
+  var anyUrl = SHEET_URLS.kpi||SHEET_URLS.po||SHEET_URLS.irn;
   if (!anyUrl) { setSyncState(null); return; }
   try {
-    var r = await fetch(SHEET_URLS.kpi, {cache:'no-store'});
-    if (!r.ok) throw new Error('HTTP ' + r.status);
-    var text = await r.text();
-    applyKPI(text.split('\n'));
-    var now = new Date();
-    var ds = now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
-    setSyncState(true, ds);
-  } catch(e) {
-    setSyncState(false, e.message.slice(0,30));
-  }
+    var r = await fetch(SHEET_URLS.kpi, {mode:'cors',cache:'no-store'});
+    if (!r.ok) throw new Error('HTTP '+r.status);
+    applyKPI(await r.text());
+    var now=new Date();
+    setSyncState(true, now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}));
+  } catch(e) { setSyncState(false, e.message.slice(0,40)); }
 }
 
 /* Initial load + refresh every 5 min */

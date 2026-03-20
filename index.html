@@ -439,7 +439,8 @@
     border-bottom: 1px solid rgba(0,180,216,0.14);
     font-family: 'Barlow', sans-serif;
     display: flex; align-items: center;
-    padding: 8px 16px; gap: 8px; flex-wrap: wrap;
+    padding: 0 16px; gap: 8px;
+    height: 40px; overflow: hidden;
     flex-shrink: 0;
   }
   .tb-pulse { width: 8px; height: 8px; border-radius: 50%; background: #888; animation: pulse 1.4s ease-in-out infinite; flex-shrink: 0; transition: background .4s; }
@@ -1158,6 +1159,7 @@
     <span class="tb-lbl">PO Balance</span>
     <span class="tb-val" style="color:#e76f51" data-kpi="poBal">–27,984 m</span>
   </div>
+  <div style="flex:1;min-width:8px"></div>
   <div class="tb-clock" id="live-clock">--:--:--</div>
 </div>
 
@@ -1206,6 +1208,8 @@ function checkLogin() {
     document.getElementById('login-overlay').classList.add('unlocking');
     setTimeout(function() {
       document.getElementById('login-overlay').style.display = 'none';
+      /* trigger sync after login */
+      if (typeof loadSheetData === 'function') loadSheetData();
     }, 750);
   } else {
     err.classList.add('visible');
@@ -3020,8 +3024,10 @@ function fmtPct(n){
 
 function applyKPI(rows) {
   if (!rows || rows.length < 2) return;
-  /* strip , skip blank lines, skip the header row (first non-empty row with text) */
-  var cleaned = rows.map(function(r){ return r.replace(//g,'').trim(); }).filter(Boolean);
+  /* strip 
+, skip blank lines, skip the header row (first non-empty row with text) */
+  var cleaned = rows.map(function(r){ return r.replace(/
+/g,'').trim(); }).filter(Boolean);
   if (cleaned.length < 2) return;
   /* cleaned[0] = header (QTY_INSP...), cleaned[1] = data values */
   var d = parseCSVRow(cleaned[1]).map(function(v){ return v.replace(',','.'); });

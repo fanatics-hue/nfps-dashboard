@@ -417,7 +417,7 @@
   .gauge-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: rgba(200,216,232,0.7); }
   .gauge-pct { font-size: 22px; font-weight: 700; color: #e76f51; font-family: var(--fc); }
   .gauge-track { height: 14px; background: rgba(255,255,255,0.08); border-radius: 7px; overflow: hidden; position: relative; }
-  .gauge-fill { height: 100%; border-radius: 7px; background: #e76f51; width: 61%; }
+  .gauge-fill { height: 100%; border-radius: 7px; background: #e76f51; width: 61%; transition: width .6s ease; }
   .gauge-target-line { position: absolute; right: 0; top: 0; width: 2px; height: 100%; background: rgba(46,196,182,0.7); }
   .gauge-meta { display: flex; justify-content: space-between; margin-top: 6px; font-size: 11px; color: rgba(200,216,232,0.5); flex-wrap: wrap; gap: 4px; }
   .kpi-table th { font-size: 11px; }
@@ -1391,14 +1391,14 @@ window.addEventListener('load', function() {
         </div>
         <div style="padding:14px 18px;display:flex;flex-direction:column;gap:12px">
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-            <div class="kpi-card kred"><div class="kl">% plates at EEW</div><div class="kv">61.00%</div><div class="kd neg">Target: 100% &nbsp;|&nbsp; Delta: -39.00%</div></div>
+            <div class="kpi-card kred"><div class="kl">% plates at EEW</div><div class="kv"><span data-ov="voest-pct">61.00%</span></div><div class="kd neg">Target: 100% &nbsp;|&nbsp; Delta: <span data-ov="voest-delta">-39.00%</span></div></div>
             <div class="kpi-card kblue"><div class="kl">Total plates ordered</div><div class="kv">4,502 <span style="font-size:14px;color:rgba(200,216,232,0.5)">NOS</span></div><div class="kd neu">Outstanding: 1,832 plates</div></div>
-            <div class="kpi-card kamber"><div class="kl">Plates received at EEW</div><div class="kv">2,746 <span style="font-size:14px;color:rgba(200,216,232,0.5)">NOS</span></div><div class="kd neg">1,756 plates still pending</div></div>
+            <div class="kpi-card kamber"><div class="kl">Plates received at EEW</div><div class="kv"><span data-ov="voest-nos">2,746</span> <span style="font-size:14px;color:rgba(200,216,232,0.5)">NOS</span></div><div class="kd neg"><span data-ov="voest-pending-nos">1,756</span> plates still pending</div></div>
           </div>
           <div class="gauge-wrap">
             <div class="gauge-label-row">
               <span class="gauge-title">Plate delivery progress — VAGB to EEW</span>
-              <span class="gauge-pct">61.00%</span>
+              <span class="gauge-pct" data-ov="voest-pct2">61.00%</span>
             </div>
             <div class="gauge-track">
               <div class="gauge-fill"></div>
@@ -1406,8 +1406,8 @@ window.addEventListener('load', function() {
             </div>
             <div class="gauge-meta">
               <span>0 NOS</span>
-              <span style="color:#e76f51">2,746 received</span>
-              <span style="color:rgba(200,216,232,0.4)">1,756 pending</span>
+              <span style="color:#e76f51"><span data-ov="voest-nos2">2,746</span> received</span>
+              <span style="color:rgba(200,216,232,0.4)"><span data-ov="voest-pending2">1,756</span> pending</span>
               <span style="color:#2ec4b6">4,502 total</span>
             </div>
           </div>
@@ -1425,9 +1425,9 @@ window.addEventListener('load', function() {
               <tbody>
                 <tr>
                   <td style="padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05);color:#c8d8e8">% plates at EEW (by VAGB)</td>
-                  <td style="text-align:right;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05)" class="val-neg">61.00%</td>
+                  <td style="text-align:right;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05)" class="val-neg"><span data-ov="voest-pct3">61.00%</span></td>
                   <td style="text-align:right;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(200,216,232,0.55)">100.00%</td>
-                  <td style="text-align:right;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05)" class="val-neg">-39.00%</td>
+                  <td style="text-align:right;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05)" class="val-neg"><span data-ov="voest-delta2">-39.00%</span></td>
                   <td style="text-align:center;padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.05)"><span class="pill pill-red">Behind</span></td>
                 </tr>
                 <tr>
@@ -1439,9 +1439,9 @@ window.addEventListener('load', function() {
                 </tr>
                 <tr>
                   <td style="padding:7px 8px;color:#c8d8e8">Plates received at EEW (NOS)</td>
-                  <td style="text-align:right;padding:7px 8px" class="val-neu">2,746</td>
+                  <td style="text-align:right;padding:7px 8px" class="val-neu"><span data-ov="voest-nos3">2,746</span></td>
                   <td style="text-align:right;padding:7px 8px;color:rgba(200,216,232,0.55)">—</td>
-                  <td style="text-align:right;padding:7px 8px" class="val-pos">61.00%</td>
+                  <td style="text-align:right;padding:7px 8px" class="val-pos"><span data-ov="voest-pct4">61.00%</span></td>
                   <td style="text-align:center;padding:7px 8px"><span class="pill pill-blue">In transit</span></td>
                 </tr>
               </tbody>
@@ -1461,11 +1461,11 @@ window.addEventListener('load', function() {
         </div>
         <!-- summary totals bar -->
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-bottom:1px solid rgba(0,180,216,0.18)">
-          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">Qty inspected (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#fff">29,265</div></div>
-          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">Qty released (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#2ec4b6">26,038</div></div>
-          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">Pending (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#f4a261">+3,228</div></div>
-          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">PO qty (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#fff">54,022</div></div>
-          <div style="padding:10px 14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">PO balance (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#e76f51">-27,984</div></div>
+          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">Qty inspected (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#fff" data-ov="insp">29,265</div></div>
+          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">Qty released (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#2ec4b6" data-ov="rel">26,038</div></div>
+          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">Pending (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#f4a261" data-ov="pend">+3,228</div></div>
+          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">PO qty (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#fff" data-ov="poQty">54,022</div></div>
+          <div style="padding:10px 14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">PO balance (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#e76f51" data-ov="poBal">-27,984</div></div>
         </div>
         <!-- scrollable table -->
         <div style="overflow-x:auto">
@@ -3088,6 +3088,48 @@ function applyKPI(rawText) {
   set('[data-kpi="voest"]', fmtPct(col('VOEST_PCT',5)));
   var nos = toNum(col('VOEST_NOS',6));
   if (!isNaN(nos)) set('[data-kpi-extra="voest"]', nos.toLocaleString('it-IT')+' / 4,502 NOS');
+
+  /* ── Also update Overview section elements ── */
+  var inspV  = toNum(col('QTY_INSP',0));
+  var relV   = toNum(col('QTY_REL',1));
+  var pendV  = toNum(col('PENDING',2));
+  var poQtyV = toNum(col('PO_QTY',3));
+  var poBalV = toNum(col('PO_BAL',4));
+  var pctV   = toNum(col('VOEST_PCT',5));
+  var nosV   = toNum(col('VOEST_NOS',6));
+
+  function setOv(sel,val){ if(!val) return; document.querySelectorAll('[data-ov="'+sel+'"]').forEach(function(el){el.textContent=val;}); }
+  function fmtInt(n){ return isNaN(n)?'—':Math.round(n).toLocaleString('it-IT'); }
+
+  /* Production totals bar */
+  if(!isNaN(inspV))  setOv('insp',  fmtInt(inspV));
+  if(!isNaN(relV))   setOv('rel',   fmtInt(relV));
+  if(!isNaN(pendV))  setOv('pend',  (!isNaN(pendV)?(pendV>=0?'+':''): '')+fmtInt(pendV));
+  if(!isNaN(poQtyV)) setOv('poQty', fmtInt(poQtyV));
+  if(!isNaN(poBalV)) setOv('poBal', fmtInt(poBalV));
+
+  /* VOESTALPINE KPI tracker */
+  if(!isNaN(pctV)) {
+    var pctStr  = pctV.toFixed(2)+'%';
+    var deltaStr= (pctV-100).toFixed(2)+'%';
+    setOv('voest-pct',   pctStr);
+    setOv('voest-pct2',  pctStr);
+    setOv('voest-pct3',  pctStr);
+    setOv('voest-pct4',  pctStr);
+    setOv('voest-delta', deltaStr);
+    setOv('voest-delta2',deltaStr);
+    /* gauge fill bar */
+    document.querySelectorAll('.gauge-fill').forEach(function(el){ el.style.width = pctV.toFixed(1)+'%'; });
+  }
+  if(!isNaN(nosV)) {
+    var nosStr     = fmtInt(nosV);
+    var pendingNos = fmtInt(4502 - nosV);
+    setOv('voest-nos',        nosStr);
+    setOv('voest-nos2',       nosStr);
+    setOv('voest-nos3',       nosStr);
+    setOv('voest-pending-nos',pendingNos);
+    setOv('voest-pending2',   pendingNos);
+  }
 }
 
 

@@ -3020,8 +3020,12 @@ function toNum(s) {
   s = String(s).split('\r').join('').replace(/"/g,'').trim();
   var ld = s.lastIndexOf('.');
   var lc = s.lastIndexOf(',');
-  if (lc > ld) { s = s.split('.').join('').replace(',','.'); }
-  else          { s = s.split(',').join(''); }
+  var afterComma = lc >= 0 ? s.slice(lc+1) : '';
+  /* Comma is thousands separator if exactly 3 digits follow it and no dot comes after */
+  var commaIsThousands = (lc >= 0 && afterComma.length === 3 && afterComma.indexOf('.') === -1 && afterComma.indexOf(',') === -1);
+  if (commaIsThousands)  { s = s.split(',').join(''); }           /* 2,796→2796  |  29,265.462→29265.462 */
+  else if (lc > ld)      { s = s.split('.').join('').replace(',','.'); } /* 29.265,462→29265.462 */
+  else                   { s = s.split(',').join(''); }           /* 29265.462  |  62.11  |  -27983.97 */
   return parseFloat(s);
 }
 function fmtM(n){
@@ -3087,7 +3091,7 @@ function applyKPI(rawText) {
   set('[data-kpi="poBal"]', fmtM(col('PO_BAL',4)));
   set('[data-kpi="voest"]', fmtPct(col('VOEST_PCT',5)));
   var nos = toNum(col('VOEST_NOS',6));
-  if (!isNaN(nos)) set('[data-kpi-extra="voest"]', nos.toLocaleString('it-IT')+' / 4,502 NOS');
+  if (!isNaN(nos)) set('[data-kpi-extra="voest"]', String(Math.round(nos))+' / 4,502 NOS');
 
   /* ── Also update Overview section elements ── */
   var inspV  = toNum(col('QTY_INSP',0));
@@ -3099,7 +3103,7 @@ function applyKPI(rawText) {
   var nosV   = toNum(col('VOEST_NOS',6));
 
   function setOv(sel,val){ if(!val) return; document.querySelectorAll('[data-ov="'+sel+'"]').forEach(function(el){el.textContent=val;}); }
-  function fmtInt(n){ return isNaN(n)?'—':Math.round(n).toLocaleString('it-IT'); }
+  function fmtInt(n){ return isNaN(n)?'—':String(Math.round(n)); }  /* no thousands sep — avoids 2.796 confusion */
 
   /* Production totals bar */
   if(!isNaN(inspV))  setOv('insp',  fmtInt(inspV));
@@ -3122,8 +3126,8 @@ function applyKPI(rawText) {
     document.querySelectorAll('.gauge-fill').forEach(function(el){ el.style.width = pctV.toFixed(1)+'%'; });
   }
   if(!isNaN(nosV)) {
-    var nosStr     = fmtInt(nosV);
-    var pendingNos = fmtInt(4502 - nosV);
+    var nosStr     = String(Math.round(nosV));  /* plain integer, no thousands sep */
+    var pendingNos = String(Math.round(4502 - nosV));
     setOv('voest-nos',        nosStr);
     setOv('voest-nos2',       nosStr);
     setOv('voest-nos3',       nosStr);

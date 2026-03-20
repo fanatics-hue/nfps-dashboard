@@ -1296,15 +1296,6 @@ window.addEventListener('load', function() {
     <button class="tm-close" onclick="closeThemeModal()">Chiudi</button>
   </div>
 </div>
-
-
-<!-- ── SYNC DEBUG PANEL (remove after testing) ── -->
-<div id="sync-debug-wrap" style="position:fixed;bottom:16px;right:16px;z-index:9999;background:rgba(2,12,27,0.95);border:1px solid rgba(0,180,216,0.3);border-radius:10px;padding:12px 16px;width:480px;max-height:220px;overflow:hidden;font-family:Barlow,sans-serif;">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-    <span style="font-size:11px;font-weight:700;color:#00b4d8;letter-spacing:1px;text-transform:uppercase;">Sync Debug</span>
-    <button onclick="document.getElementById('sync-debug-wrap').style.display='none'" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;color:rgba(200,216,232,0.6);font-size:10px;padding:2px 8px;cursor:pointer;">✕ Close</button>
-  </div>
-  <div id="sync-debug" style="max-height:170px;overflow-y:auto;"></div>
 </div>
 
 <div class="page">
@@ -3036,8 +3027,7 @@ function applyKPI(rows) {
   if (!rows || rows.length < 2) return;
   /* strip 
 , skip blank lines, skip the header row (first non-empty row with text) */
-  var cleaned = rows.map(function(r){ return r.replace(/
-/g,'').trim(); }).filter(Boolean);
+  var cleaned = rows.map(function(r){ return r.split('\r').join('').split('\n').join('').trim(); }).filter(Boolean);
   if (cleaned.length < 2) return;
   /* cleaned[0] = header (QTY_INSP...), cleaned[1] = data values */
   var d = parseCSVRow(cleaned[1]).map(function(v){ return v.replace(',','.'); });
@@ -3058,38 +3048,19 @@ function applyKPI(rows) {
   }
 }
 
-/* debug logger */
-function dbg(msg) {
-  var p = document.getElementById('sync-debug');
-  if (!p) return;
-  var d = document.createElement('div');
-  d.textContent = new Date().toLocaleTimeString('it-IT') + '  ' + msg;
-  d.style.cssText = 'font-size:11px;font-family:monospace;color:#80d0e0;border-bottom:1px solid rgba(0,180,216,0.1);padding:3px 0;';
-  p.appendChild(d);
-  p.scrollTop = p.scrollHeight;
-}
-
 async function loadSheetData() {
   var anyUrl = SHEET_URLS.kpi || SHEET_URLS.po || SHEET_URLS.irn;
-  if (!anyUrl) { setSyncState(null); dbg('No URLs configured'); return; }
-
-  dbg('Fetching: ' + SHEET_URLS.kpi.slice(0,70) + '...');
+  if (!anyUrl) { setSyncState(null); return; }
   try {
-    var r = await fetch(SHEET_URLS.kpi);
-    dbg('HTTP ' + r.status + ' ok=' + r.ok);
+    var r = await fetch(SHEET_URLS.kpi, {cache:'no-store'});
     if (!r.ok) throw new Error('HTTP ' + r.status);
     var text = await r.text();
-    dbg('Received ' + text.length + ' chars');
-    dbg('Raw: ' + text.slice(0,300).replace(/[\r\n]+/g,' | '));
-    var rows = text.split('\n');
-    applyKPI(rows);
+    applyKPI(text.split('\n'));
     var now = new Date();
     var ds = now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'});
     setSyncState(true, ds);
-    dbg('Sync OK at '+ds);
   } catch(e) {
-    setSyncState(false, 'Error: '+e.message);
-    dbg('ERROR: '+e.message+' | stack: '+(e.stack||'').slice(0,80));
+    setSyncState(false, e.message.slice(0,30));
   }
 }
 

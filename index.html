@@ -3009,16 +3009,26 @@ function parseCSVRow(line) {
   return result;
 }
 
-function fmtM(n) { return isNaN(n)?'—':Number(n).toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:3})+' m'; }
-function fmtPct(n){ return isNaN(n)?'—':Math.round(Number(n))+'%'; }
+function fmtM(n) {
+  var v = Number(String(n).replace(',','.'));
+  return isNaN(v)?'—':v.toLocaleString('it-IT',{minimumFractionDigits:0,maximumFractionDigits:3})+' m';
+}
+function fmtPct(n){
+  var v = Number(String(n).replace(',','.'));
+  return isNaN(v)?'—':Math.round(v)+'%';
+}
 
 function applyKPI(rows) {
   if (!rows || rows.length < 2) return;
-  var d = parseCSVRow(rows[1]);
+  /* strip , skip blank lines, skip the header row (first non-empty row with text) */
+  var cleaned = rows.map(function(r){ return r.replace(//g,'').trim(); }).filter(Boolean);
+  if (cleaned.length < 2) return;
+  /* cleaned[0] = header (QTY_INSP...), cleaned[1] = data values */
+  var d = parseCSVRow(cleaned[1]).map(function(v){ return v.replace(',','.'); });
   var map = {
     insp:  { val: fmtM(d[0]),    el: '[data-kpi="insp"]' },
     rel:   { val: fmtM(d[1]),    el: '[data-kpi="rel"]'  },
-    pend:  { val: (Number(d[2])>=0?'+':'')+fmtM(d[2]), el: '[data-kpi="pend"]' },
+    pend:  { val: (Number(d[2].replace(',','.'))||0)>=0?'+'+fmtM(d[2]):fmtM(d[2]), el: '[data-kpi="pend"]' },
     poQty: { val: fmtM(d[3]),    el: '[data-kpi="poQty"]'},
     poBal: { val: fmtM(d[4]),    el: '[data-kpi="poBal"]'},
     voest: { val: fmtPct(d[5]),  el: '[data-kpi="voest"]'},
@@ -3026,8 +3036,10 @@ function applyKPI(rows) {
   Object.keys(map).forEach(function(k) {
     document.querySelectorAll(map[k].el).forEach(function(el){ if(map[k].val) el.textContent = map[k].val; });
   });
-  /* extra for VOEST NOS */
-  if (d[6]) document.querySelectorAll('[data-kpi-extra="voest"]').forEach(function(el){ el.textContent = Number(d[6]).toLocaleString('it-IT')+' / 4,502 NOS'; });
+  if (d[6]) {
+    var nos = Number(d[6].replace(',','.'));
+    if (!isNaN(nos)) document.querySelectorAll('[data-kpi-extra="voest"]').forEach(function(el){ el.textContent = nos.toLocaleString('it-IT')+' / 4,502 NOS'; });
+  }
 }
 
 async function loadSheetData() {

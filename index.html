@@ -1140,6 +1140,9 @@
 }
 </style>
 
+<!-- SheetJS library for native Excel export -->
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+
 </head>
 <body data-theme="dark">
 
@@ -1390,14 +1393,9 @@ window.addEventListener('load', function() {
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px">
             <div class="card-title" style="margin-bottom:0">Supply chain</div>
-            <div style="display:flex;gap:8px">
-              <button onclick="exportSupplyChainToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
-                📊 Export XLSX
-              </button>
-              <button onclick="window.print()" style="background:rgba(231,111,81,0.1);color:#e76f51;border:1px solid rgba(231,111,81,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
-                📄 PDF
-              </button>
-            </div>
+            <button onclick="exportSupplyChainToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+              📊 Export XLSX
+            </button>
           </div>
           <table id="supply-chain-table">
             <tr><th>Role</th><th>Company</th><th>Location</th></tr>
@@ -1519,9 +1517,6 @@ window.addEventListener('load', function() {
             <button onclick="exportProductionToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
               📊 Export XLSX
             </button>
-            <button onclick="window.print()" style="background:rgba(231,111,81,0.1);color:#e76f51;border:1px solid rgba(231,111,81,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
-              📄 PDF
-            </button>
           </div>
         </div>
         
@@ -1629,14 +1624,9 @@ window.addEventListener('load', function() {
         <!-- Header con titolo e pulsanti export -->
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
           <div class="card-title" style="margin-bottom:0">Inspection Release Notes — Pipes Released &amp; Shipping Status</div>
-          <div style="display:flex;gap:8px">
-            <button onclick="exportIRNToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
-              📊 Export XLSX
-            </button>
-            <button onclick="window.print()" style="background:rgba(231,111,81,0.1);color:#e76f51;border:1px solid rgba(231,111,81,0.3);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
-              📄 Export PDF
-            </button>
-          </div>
+          <button onclick="exportIRNToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+            📊 Export XLSX
+          </button>
         </div>
 
         <!-- Summary KPI bar con gradiente -->
@@ -1801,14 +1791,9 @@ window.addEventListener('load', function() {
           <div class="card" style="overflow-x:auto">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px">
               <div class="card-title" style="margin-bottom:0">ITP steps &amp; inspection points — QCP 5129_20-4600015016-00054 Rev.04 (AFC)</div>
-              <div style="display:flex;gap:8px">
-                <button onclick="exportITPToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
-                  📊 Export XLSX
-                </button>
-                <button onclick="window.print()" style="background:rgba(231,111,81,0.1);color:#e76f51;border:1px solid rgba(231,111,81,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
-                  📄 PDF
-                </button>
-              </div>
+              <button onclick="exportITPToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+                📊 Export XLSX
+              </button>
             </div>
             <div style="font-size:10px;color:var(--muted);margin-bottom:8px">
               H = Hold Point &nbsp;|&nbsp; W = Witness &nbsp;|&nbsp; W1 = First-of-kind Witness &nbsp;|&nbsp; S = Surveillance &nbsp;|&nbsp; M = Monitoring &nbsp;|&nbsp; R = Review &nbsp;|&nbsp; A = Approval
@@ -2402,14 +2387,9 @@ window.addEventListener('load', function() {
         <div class="card">
           <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px">
             <div class="card-title" style="margin-bottom:0">Key achievements / EEW Punch List</div>
-            <div style="display:flex;gap:8px">
-              <button onclick="exportPunchListToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
-                📊 Export XLSX
-              </button>
-              <button onclick="window.print()" style="background:rgba(231,111,81,0.1);color:#e76f51;border:1px solid rgba(231,111,81,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
-                📄 PDF
-              </button>
-            </div>
+            <button onclick="exportPunchListToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+              📊 Export XLSX
+            </button>
           </div>
 
           <!-- KPI strip -->
@@ -3005,7 +2985,9 @@ function printReport() {
 }
 
 
-/* ── EXPORT IRN TABLE TO EXCEL ── */
+/* ── EXPORT FUNCTIONS - NATIVE XLSX using SheetJS ── */
+
+/* ── EXPORT IRN TABLE TO XLSX ── */
 function exportIRNToExcel() {
   var rows = [];
   var headerRow = ['SAIPEM PO / IRN', 'Pipes Released', 'Length (mm)', 'Pipes Sent', 'Avail. Shipping', 'Sent %'];
@@ -3024,10 +3006,10 @@ function exportIRNToExcel() {
   
   rows.push(['TOTAL', '2,104', '26,112,442', '1,438', '666', '']);
   
-  downloadCSV(rows, 'IRN_Shipping_Status');
+  downloadXLSX(rows, 'IRN_Shipping_Status');
 }
 
-/* ── EXPORT PRODUCTION TABLE TO EXCEL ── */
+/* ── EXPORT PRODUCTION TABLE TO XLSX ── */
 function exportProductionToExcel() {
   var rows = [];
   var headerRow = ['SAI PO', 'SAIPEM Item', 'EEW Item', 'QE LNG', 'Description', 'Status', 'Insp. (m)', 'Released (m)', 'Pending (m)', 'PO Qty (m)', 'PO Bal.', 'Prod. %', 'Released %'];
@@ -3046,10 +3028,10 @@ function exportProductionToExcel() {
   
   rows.push(['', '', '', '', '', 'TOTAL', '29,265.5', '26,037.6', '+3,227.8', '54,021.6', '−27,984.0', '54.2%', '48.2%']);
   
-  downloadCSV(rows, 'Production_Progress');
+  downloadXLSX(rows, 'Production_Progress');
 }
 
-/* ── EXPORT SUPPLY CHAIN TABLE TO EXCEL ── */
+/* ── EXPORT SUPPLY CHAIN TABLE TO XLSX ── */
 function exportSupplyChainToExcel() {
   var rows = [];
   var headerRow = ['Role', 'Company', 'Location'];
@@ -3066,10 +3048,10 @@ function exportSupplyChainToExcel() {
     rows.push(row);
   }
   
-  downloadCSV(rows, 'Supply_Chain');
+  downloadXLSX(rows, 'Supply_Chain');
 }
 
-/* ── EXPORT ITP TABLE TO EXCEL ── */
+/* ── EXPORT ITP TABLE TO XLSX ── */
 function exportITPToExcel() {
   var rows = [];
   var headerRow = ['Step', 'Operation / Activity', 'EEW', 'SUMITOMO', 'TPIA', 'EPCI', 'CPY'];
@@ -3086,10 +3068,10 @@ function exportITPToExcel() {
     rows.push(row);
   }
   
-  downloadCSV(rows, 'ITP_Inspection_Points');
+  downloadXLSX(rows, 'ITP_Inspection_Points');
 }
 
-/* ── EXPORT PUNCH LIST TO EXCEL ── */
+/* ── EXPORT PUNCH LIST TO XLSX ── */
 function exportPunchListToExcel() {
   var rows = [];
   var headerRow = ['SR NO', 'IRID', 'Vendor Group', 'Description', 'Close Date', 'Punch Ref', 'Status'];
@@ -3118,25 +3100,34 @@ function exportPunchListToExcel() {
     }
   }
   
-  downloadCSV(rows, 'EEW_Punch_List');
+  downloadXLSX(rows, 'EEW_Punch_List');
 }
 
-/* ── HELPER FUNCTION: Download CSV ── */
-function downloadCSV(rows, filename) {
-  var csv = '';
-  for (var r = 0; r < rows.length; r++) {
-    csv += rows[r].join(',') + '\n';
-  }
+/* ── HELPER FUNCTION: Download native XLSX using SheetJS ── */
+function downloadXLSX(rows, filename) {
+  // Create a new workbook
+  var wb = XLSX.utils.book_new();
   
-  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  var link = document.createElement('a');
-  var url = URL.createObjectURL(blob);
-  link.setAttribute('href', url);
-  link.setAttribute('download', filename + '_' + new Date().toISOString().slice(0,10) + '.csv');
-  link.style.visibility = 'hidden';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  // Convert rows array to worksheet
+  var ws = XLSX.utils.aoa_to_sheet(rows);
+  
+  // Auto-size columns
+  var colWidths = [];
+  rows.forEach(function(row) {
+    row.forEach(function(cell, colIndex) {
+      var cellLen = String(cell).length;
+      if (!colWidths[colIndex] || cellLen > colWidths[colIndex]) {
+        colWidths[colIndex] = cellLen;
+      }
+    });
+  });
+  ws['!cols'] = colWidths.map(function(w) { return { wch: Math.min(w + 2, 50) }; });
+  
+  // Add worksheet to workbook
+  XLSX.utils.book_append_sheet(wb, ws, 'Data');
+  
+  // Generate XLSX file and trigger download
+  XLSX.writeFile(wb, filename + '_' + new Date().toISOString().slice(0,10) + '.xlsx');
 }
 
 /* ── THEME DROPDOWN ── */

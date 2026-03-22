@@ -1184,8 +1184,6 @@
     <span class="tb-lbl">PO Balance</span>
     <span class="tb-val" style="color:#e76f51" data-kpi="poBal">–27,984 m</span>
   </div>
-  <div style="flex:1;min-width:8px"></div>
-  <div class="tb-clock" id="live-clock">--:--:--</div>
 </div>
 
 <!-- ═══════════════════════════════════
@@ -1390,8 +1388,18 @@ window.addEventListener('load', function() {
           </div>
         </div>
         <div class="card">
-          <div class="card-title">Supply chain</div>
-          <table>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+            <div class="card-title" style="margin-bottom:0">Supply chain</div>
+            <div style="display:flex;gap:8px">
+              <button onclick="exportSupplyChainToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+                📊 Export XLSX
+              </button>
+              <button onclick="window.print()" style="background:rgba(231,111,81,0.1);color:#e76f51;border:1px solid rgba(231,111,81,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+                📄 PDF
+              </button>
+            </div>
+          </div>
+          <table id="supply-chain-table">
             <tr><th>Role</th><th>Company</th><th>Location</th></tr>
             <tr><td>Client</td><td style="color:#fff;font-weight:600">QatarEnergy LNG</td><td>Qatar</td></tr>
             <tr><td>EPC Contractor</td><td style="color:#fff;font-weight:600">Saipem</td><td>Italy / Offshore</td></tr>
@@ -1502,12 +1510,18 @@ window.addEventListener('load', function() {
       </div>
 
       <div class="card" style="padding:0;overflow:hidden">
-        <!-- Header rinnovato -->
+        <!-- Header rinnovato con pulsanti export -->
         <div style="padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:2px solid var(--border)">
           <div class="card-title" style="margin-bottom:0;color:var(--acc)">Production progress — pipe types</div>
-          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:11px">
-            <span style="color:var(--muted)">SAIPEM PO 1506050 &nbsp;|&nbsp; <strong style="color:var(--text)">16 of 16 line items</strong></span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+            <span style="color:var(--muted);font-size:11px">SAIPEM PO 1506050 &nbsp;|&nbsp; <strong style="color:var(--text)">16 of 16 line items</strong></span>
             <span class="pill ok">Completed</span>
+            <button onclick="exportProductionToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+              📊 Export XLSX
+            </button>
+            <button onclick="window.print()" style="background:rgba(231,111,81,0.1);color:#e76f51;border:1px solid rgba(231,111,81,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+              📄 PDF
+            </button>
           </div>
         </div>
         
@@ -1574,7 +1588,7 @@ window.addEventListener('load', function() {
         
         <!-- scrollable table -->
         <div style="overflow-x:auto">
-          <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:1100px">
+          <table id="production-table" style="width:100%;border-collapse:collapse;font-size:11px;min-width:1100px">
             <thead>
               <tr style="background:rgba(0,180,216,0.07)">
                 <th style="padding:7px 8px;text-align:left;color:rgba(200,216,232,0.55);font-size:10px;text-transform:uppercase;letter-spacing:0.4px;border-bottom:1px solid rgba(0,180,216,0.18);white-space:nowrap">SAI PO</th>
@@ -1785,11 +1799,21 @@ window.addEventListener('load', function() {
             </div>
           </div>
           <div class="card" style="overflow-x:auto">
-            <div class="card-title">ITP steps &amp; inspection points — QCP 5129_20-4600015016-00054 Rev.04 (AFC)</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:8px">
+              <div class="card-title" style="margin-bottom:0">ITP steps &amp; inspection points — QCP 5129_20-4600015016-00054 Rev.04 (AFC)</div>
+              <div style="display:flex;gap:8px">
+                <button onclick="exportITPToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+                  📊 Export XLSX
+                </button>
+                <button onclick="window.print()" style="background:rgba(231,111,81,0.1);color:#e76f51;border:1px solid rgba(231,111,81,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+                  📄 PDF
+                </button>
+              </div>
+            </div>
             <div style="font-size:10px;color:var(--muted);margin-bottom:8px">
               H = Hold Point &nbsp;|&nbsp; W = Witness &nbsp;|&nbsp; W1 = First-of-kind Witness &nbsp;|&nbsp; S = Surveillance &nbsp;|&nbsp; M = Monitoring &nbsp;|&nbsp; R = Review &nbsp;|&nbsp; A = Approval
             </div>
-            <table style="font-size:11px;min-width:700px">
+            <table id="itp-table" style="font-size:11px;min-width:700px">
               <tr><th style="width:36px">Step</th><th>Operation / Activity</th><th style="text-align:center;width:42px">EEW</th><th style="text-align:center;width:42px">SUMITOMO</th><th style="text-align:center;width:42px">TPIA</th><th style="text-align:center;width:42px">EPCI</th><th style="text-align:center;width:42px">CPY</th></tr>
               <tr><td>1</td><td>Check procedure approvals (procedures at AFC before PIM)</td><td style="text-align:center"><span class="pill warn">H</span></td><td style="text-align:center"><span class="pill warn">H</span></td><td style="text-align:center"><span class="pill gold">R</span></td><td style="text-align:center"><span class="pill gold">R</span></td><td style="text-align:center"><span class="pill gold">R</span></td></tr>
               <tr><td>2</td><td>Pre-Inspection Meeting (PIM)</td><td style="text-align:center"><span class="pill warn">H</span></td><td style="text-align:center"><span class="pill gold">R</span></td><td style="text-align:center"><span class="pill gold">R</span></td><td style="text-align:center"><span class="pill gold">R</span></td><td style="text-align:center"><span class="pill gold">R</span></td></tr>
@@ -2376,7 +2400,17 @@ window.addEventListener('load', function() {
           </div>
         </div>
         <div class="card">
-          <div class="card-title">Key achievements / EEW Punch List</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:12px">
+            <div class="card-title" style="margin-bottom:0">Key achievements / EEW Punch List</div>
+            <div style="display:flex;gap:8px">
+              <button onclick="exportPunchListToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+                📊 Export XLSX
+              </button>
+              <button onclick="window.print()" style="background:rgba(231,111,81,0.1);color:#e76f51;border:1px solid rgba(231,111,81,0.3);padding:6px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">
+                📄 PDF
+              </button>
+            </div>
+          </div>
 
           <!-- KPI strip -->
           <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:16px">
@@ -2973,42 +3007,132 @@ function printReport() {
 
 /* ── EXPORT IRN TABLE TO EXCEL ── */
 function exportIRNToExcel() {
-  // Prepara i dati dalla tabella IRN
-  var table = document.getElementById('irn-table');
   var rows = [];
-  
-  // Header
   var headerRow = ['SAIPEM PO / IRN', 'Pipes Released', 'Length (mm)', 'Pipes Sent', 'Avail. Shipping', 'Sent %'];
   rows.push(headerRow);
   
-  // Body data dal tbody
   var tbody = document.getElementById('irn-tbody');
   var trs = tbody.getElementsByTagName('tr');
   for (var i = 0; i < trs.length; i++) {
     var tds = trs[i].getElementsByTagName('td');
     var row = [];
     for (var j = 0; j < tds.length; j++) {
-      var text = tds[j].textContent.trim();
-      row.push(text);
+      row.push(tds[j].textContent.trim());
     }
     rows.push(row);
   }
   
-  // Footer totals
   rows.push(['TOTAL', '2,104', '26,112,442', '1,438', '666', '']);
   
-  // Crea CSV
+  downloadCSV(rows, 'IRN_Shipping_Status');
+}
+
+/* ── EXPORT PRODUCTION TABLE TO EXCEL ── */
+function exportProductionToExcel() {
+  var rows = [];
+  var headerRow = ['SAI PO', 'SAIPEM Item', 'EEW Item', 'QE LNG', 'Description', 'Status', 'Insp. (m)', 'Released (m)', 'Pending (m)', 'PO Qty (m)', 'PO Bal.', 'Prod. %', 'Released %'];
+  rows.push(headerRow);
+  
+  var tbody = document.getElementById('po-tbody');
+  var trs = tbody.getElementsByTagName('tr');
+  for (var i = 0; i < trs.length; i++) {
+    var tds = trs[i].getElementsByTagName('td');
+    var row = [];
+    for (var j = 0; j < tds.length; j++) {
+      row.push(tds[j].textContent.trim().replace(/\n/g, ' '));
+    }
+    rows.push(row);
+  }
+  
+  rows.push(['', '', '', '', '', 'TOTAL', '29,265.5', '26,037.6', '+3,227.8', '54,021.6', '−27,984.0', '54.2%', '48.2%']);
+  
+  downloadCSV(rows, 'Production_Progress');
+}
+
+/* ── EXPORT SUPPLY CHAIN TABLE TO EXCEL ── */
+function exportSupplyChainToExcel() {
+  var rows = [];
+  var headerRow = ['Role', 'Company', 'Location'];
+  rows.push(headerRow);
+  
+  var table = document.getElementById('supply-chain-table');
+  var trs = table.getElementsByTagName('tr');
+  for (var i = 1; i < trs.length; i++) { // Skip header row
+    var tds = trs[i].getElementsByTagName('td');
+    var row = [];
+    for (var j = 0; j < tds.length; j++) {
+      row.push(tds[j].textContent.trim());
+    }
+    rows.push(row);
+  }
+  
+  downloadCSV(rows, 'Supply_Chain');
+}
+
+/* ── EXPORT ITP TABLE TO EXCEL ── */
+function exportITPToExcel() {
+  var rows = [];
+  var headerRow = ['Step', 'Operation / Activity', 'EEW', 'SUMITOMO', 'TPIA', 'EPCI', 'CPY'];
+  rows.push(headerRow);
+  
+  var table = document.getElementById('itp-table');
+  var trs = table.getElementsByTagName('tr');
+  for (var i = 1; i < trs.length; i++) { // Skip header row
+    var tds = trs[i].getElementsByTagName('td');
+    var row = [];
+    for (var j = 0; j < tds.length; j++) {
+      row.push(tds[j].textContent.trim());
+    }
+    rows.push(row);
+  }
+  
+  downloadCSV(rows, 'ITP_Inspection_Points');
+}
+
+/* ── EXPORT PUNCH LIST TO EXCEL ── */
+function exportPunchListToExcel() {
+  var rows = [];
+  var headerRow = ['SR NO', 'IRID', 'Vendor Group', 'Description', 'Close Date', 'Punch Ref', 'Status'];
+  rows.push(headerRow);
+  
+  // Use global PL_DATA array
+  if (PL_DATA && PL_DATA.length > 0) {
+    for (var i = 0; i < PL_DATA.length; i++) {
+      var item = PL_DATA[i];
+      var vendorGroup = '';
+      // Map group ID to full name
+      if (item.grp === 'vagb') vendorGroup = 'EEW / VOESTALPINE GROBBLECH GmbH (VAGB)';
+      else if (item.grp === 'eew') vendorGroup = 'EEW Pipe Production Erndtebrück';
+      else if (item.grp === 'but') vendorGroup = 'BUTTING / VOESTALPINE GROBBLECH GmbH';
+      
+      var row = [
+        item.sr || '',
+        item.irid || '',
+        vendorGroup,
+        item.desc || '',
+        item.close || '',
+        item.punch || '',
+        item.status || ''
+      ];
+      rows.push(row);
+    }
+  }
+  
+  downloadCSV(rows, 'EEW_Punch_List');
+}
+
+/* ── HELPER FUNCTION: Download CSV ── */
+function downloadCSV(rows, filename) {
   var csv = '';
   for (var r = 0; r < rows.length; r++) {
     csv += rows[r].join(',') + '\n';
   }
   
-  // Download
   var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   var link = document.createElement('a');
   var url = URL.createObjectURL(blob);
   link.setAttribute('href', url);
-  link.setAttribute('download', 'IRN_Shipping_Status_' + new Date().toISOString().slice(0,10) + '.csv');
+  link.setAttribute('download', filename + '_' + new Date().toISOString().slice(0,10) + '.csv');
   link.style.visibility = 'hidden';
   document.body.appendChild(link);
   link.click();
@@ -3040,19 +3164,6 @@ document.addEventListener('click', function(e) {
   var picker = document.getElementById('theme-picker');
   if (picker && !picker.contains(e.target)) picker.classList.remove('open');
 });
-
-/* ── LIVE CLOCK ── */
-(function() {
-  function tick() {
-    var now = new Date();
-    var t = String(now.getHours()).padStart(2,'0') + ':' +
-            String(now.getMinutes()).padStart(2,'0') + ':' +
-            String(now.getSeconds()).padStart(2,'0');
-    document.querySelectorAll('#live-clock').forEach(function(el){ el.textContent = t; });
-  }
-  tick();
-  setInterval(tick, 1000);
-})();
 
 
 /* ══ THEME MODAL ══ */
@@ -3160,8 +3271,10 @@ var PL_GROUPS = [
   {id:'but',  label:'BUTTING / VOESTALPINE GROBBLECH GmbH',                         color:'#888',    open:true}
 ];
 var PL_STATE = { groups: PL_GROUPS };
+var PL_DATA = []; // Global variable to store punch list data for export
 
 function renderPunchList(items) {
+  PL_DATA = items; // Store data globally for export
   var root = document.getElementById('pl-acc-root');
   if (!root) return;
   root.innerHTML = '';

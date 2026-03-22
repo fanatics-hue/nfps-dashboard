@@ -1407,33 +1407,58 @@ window.addEventListener('load', function() {
       </div>
 
       <!-- VAGB KPI inline in Overview -->
-      <div style="background:#0f2040;border:1px solid rgba(0,180,216,0.18);border-radius:12px;overflow:hidden">
-        <div style="background:linear-gradient(120deg,#020c1b 0%,#0a2540 35%,#0e4d6e 65%,#0a7fa8 100%);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+      <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;overflow:hidden">
+        <!-- Header rinnovato -->
+        <div style="background:var(--metric-bg);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:2px solid var(--border)">
           <div>
-            <div style="font-family:var(--fc);font-size:13px;font-weight:700;letter-spacing:0.5px;color:#fff;text-transform:uppercase">VAGB plate supply — KPI tracker</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.7)">Linz (AT) → EEW Erndtebrück (DE) &nbsp;|&nbsp; COMP3A/B &nbsp;|&nbsp; March 2026</div>
+            <div style="font-family:var(--fc);font-size:13px;font-weight:700;letter-spacing:0.5px;color:var(--acc);text-transform:uppercase">VAGB plate supply — KPI tracker</div>
+            <div style="font-size:11px;color:var(--muted)">Linz (AT) → EEW Erndtebrück (DE) &nbsp;|&nbsp; COMP3A/B &nbsp;|&nbsp; March 2026</div>
           </div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.6)">QCP-ITP Rev.06 — AFC</div>
+          <div style="font-size:11px;color:var(--muted)">QCP-ITP Rev.06 — AFC</div>
         </div>
+        
         <div style="padding:14px 18px;display:flex;flex-direction:column;gap:12px">
-          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
-            <div class="kpi-card kred"><div class="kl">% plates at EEW</div><div class="kv"><span data-ov="voest-pct">61.00%</span></div><div class="kd neg">Target: 100% &nbsp;|&nbsp; Delta: <span data-ov="voest-delta">-39.00%</span></div></div>
-            <div class="kpi-card kblue"><div class="kl">Total plates ordered</div><div class="kv">4,502 <span style="font-size:14px;color:rgba(200,216,232,0.5)">NOS</span></div><div class="kd neu">Outstanding: <span data-ov="voest-outstanding">1,832</span> plates</div></div>
-            <div class="kpi-card kamber"><div class="kl">Plates received at EEW</div><div class="kv"><span data-ov="voest-nos">2,746</span> <span style="font-size:14px;color:rgba(200,216,232,0.5)">NOS</span></div><div class="kd neg"><span data-ov="voest-pending-nos">1,756</span> plates still pending</div></div>
+          <!-- KPI Cards Grid con gradiente -->
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+            
+            <!-- % plates at EEW -->
+            <div style="background:linear-gradient(135deg,rgba(231,111,81,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(231,111,81,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+              <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:#e76f51;opacity:0.08;border-radius:0 12px 0 50%"></div>
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">% plates at EEW</div>
+              <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:#e76f51;line-height:1" data-ov="voest-pct">61.00%</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:6px">Target: 100% · Delta: <span style="color:#e76f51" data-ov="voest-delta">-39.00%</span></div>
+            </div>
+
+            <!-- Total plates ordered -->
+            <div style="background:linear-gradient(135deg,rgba(0,180,216,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(0,180,216,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+              <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:var(--acc);opacity:0.08;border-radius:0 12px 0 50%"></div>
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Total plates ordered</div>
+              <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:var(--text);line-height:1">4,502</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:6px">Outstanding: <span style="color:#f4a261" data-ov="voest-outstanding">1,832</span> plates</div>
+            </div>
+
+            <!-- Plates received at EEW -->
+            <div style="background:linear-gradient(135deg,rgba(244,162,97,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(244,162,97,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+              <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:#f4a261;opacity:0.08;border-radius:0 12px 0 50%"></div>
+              <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Plates received at EEW</div>
+              <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:#f4a261;line-height:1" data-ov="voest-nos">2,746</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:6px"><span style="color:#e76f51" data-ov="voest-pending-nos">1,756</span> plates still pending</div>
+            </div>
           </div>
-          <div class="gauge-wrap">
-            <div class="gauge-label-row">
-              <span class="gauge-title">Plate delivery progress — VAGB to EEW</span>
-              <span class="gauge-pct" data-ov="voest-pct2">61.00%</span>
+          
+          <!-- Progress Bar moderna -->
+          <div style="background:var(--metric-bg);padding:14px;border-radius:12px;border:1px solid var(--border)">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+              <span style="font-size:12px;font-weight:600;color:var(--text)">Plate delivery progress — VAGB to EEW</span>
+              <span style="font-family:var(--fc);font-size:20px;font-weight:700;color:#2ec4b6" data-ov="voest-pct2">61.00%</span>
             </div>
-            <div class="gauge-track">
-              <div class="gauge-fill"></div>
-              <div class="gauge-target-line"></div>
+            <div style="width:100%;height:10px;background:rgba(0,0,0,0.2);border-radius:5px;position:relative;overflow:hidden">
+              <div class="gauge-fill" style="width:61%;height:100%;background:linear-gradient(90deg,#2ec4b6 0%,var(--acc) 100%);border-radius:5px"></div>
             </div>
-            <div class="gauge-meta">
+            <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)">
               <span>0 NOS</span>
-              <span style="color:#e76f51"><span data-ov="voest-nos2">2,746</span> received</span>
-              <span style="color:rgba(200,216,232,0.4)"><span data-ov="voest-pending2">1,756</span> pending</span>
+              <span style="color:#f4a261"><span data-ov="voest-nos2">2,746</span> received</span>
+              <span style="color:#e76f51"><span data-ov="voest-pending2">1,756</span> pending</span>
               <span style="color:#2ec4b6">4,502 total</span>
             </div>
           </div>
@@ -1477,22 +1502,76 @@ window.addEventListener('load', function() {
       </div>
 
       <div class="card" style="padding:0;overflow:hidden">
-        <div style="padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:1px solid rgba(0,180,216,0.18)">
-          <div class="card-title" style="margin-bottom:0">Production progress — pipe types</div>
+        <!-- Header rinnovato -->
+        <div style="padding:14px 18px 10px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;border-bottom:2px solid var(--border)">
+          <div class="card-title" style="margin-bottom:0;color:var(--acc)">Production progress — pipe types</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:11px">
-            <span style="color:rgba(200,216,232,0.6)">SAIPEM PO 1506050 &nbsp;|&nbsp; <strong style="color:#fff">16 of 16 line items</strong></span>
+            <span style="color:var(--muted)">SAIPEM PO 1506050 &nbsp;|&nbsp; <strong style="color:var(--text)">16 of 16 line items</strong></span>
             <span class="pill ok">Completed</span>
-            <span class="pill blue">In Progress</span>
           </div>
         </div>
-        <!-- summary totals bar -->
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-bottom:1px solid rgba(0,180,216,0.18)">
-          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">Qty inspected (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#fff" data-ov="insp">29,265</div></div>
-          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">Qty released (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#2ec4b6" data-ov="rel">26,038</div></div>
-          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">Pending (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#f4a261" data-ov="pend">+3,228</div></div>
-          <div style="padding:10px 14px;border-right:1px solid rgba(0,180,216,0.12)"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">PO qty (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#fff" data-ov="poQty">54,022</div></div>
-          <div style="padding:10px 14px"><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:rgba(200,216,232,0.55);margin-bottom:4px">PO balance (m)</div><div style="font-family:var(--fc);font-size:18px;font-weight:700;color:#e76f51" data-ov="poBal">-27,984</div></div>
+        
+        <!-- KPI Cards Grid con gradiente -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;padding:16px;background:var(--metric-bg)">
+          
+          <!-- Qty Inspected -->
+          <div style="background:linear-gradient(135deg,rgba(0,180,216,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(0,180,216,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:var(--acc);opacity:0.08;border-radius:0 12px 0 50%"></div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Qty inspected</div>
+            <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:var(--acc);line-height:1" data-ov="insp">29,265</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">meters</div>
+          </div>
+
+          <!-- Qty Released -->
+          <div style="background:linear-gradient(135deg,rgba(46,196,182,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(46,196,182,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:#2ec4b6;opacity:0.08;border-radius:0 12px 0 50%"></div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Qty released</div>
+            <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:#2ec4b6;line-height:1" data-ov="rel">26,038</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">meters</div>
+          </div>
+
+          <!-- Pending -->
+          <div style="background:linear-gradient(135deg,rgba(244,162,97,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(244,162,97,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:#f4a261;opacity:0.08;border-radius:0 12px 0 50%"></div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Pending</div>
+            <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:#f4a261;line-height:1" data-ov="pend">+3,228</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">meters</div>
+          </div>
+
+          <!-- PO Qty -->
+          <div style="background:linear-gradient(135deg,rgba(200,216,232,0.08) 0%,var(--card-bg) 100%);border:1px solid var(--border);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:var(--text);opacity:0.05;border-radius:0 12px 0 50%"></div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">PO qty</div>
+            <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:var(--text);line-height:1" data-ov="poQty">54,022</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">meters</div>
+          </div>
+
+          <!-- PO Balance -->
+          <div style="background:linear-gradient(135deg,rgba(231,111,81,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(231,111,81,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:#e76f51;opacity:0.08;border-radius:0 12px 0 50%"></div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">PO balance</div>
+            <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:#e76f51;line-height:1" data-ov="poBal">-27,984</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:2px">meters</div>
+          </div>
         </div>
+        
+        <!-- Progress Bar moderna -->
+        <div style="background:var(--metric-bg);padding:16px;margin:0;border-bottom:1px solid var(--border)">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+            <span style="font-size:12px;font-weight:600;color:var(--text)">Overall completion</span>
+            <span style="font-family:var(--fc);font-size:20px;font-weight:700;color:#2ec4b6">48.2%</span>
+          </div>
+          <div style="width:100%;height:10px;background:rgba(0,0,0,0.2);border-radius:5px;position:relative;overflow:hidden">
+            <div style="width:48.2%;height:100%;background:linear-gradient(90deg,#2ec4b6 0%,var(--acc) 100%);border-radius:5px"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)">
+            <span>0 m</span>
+            <span style="color:#2ec4b6">26,038 m released</span>
+            <span style="color:#f4a261">3,228 m pending</span>
+            <span style="color:var(--text)">54,022 m total</span>
+          </div>
+        </div>
+        
         <!-- scrollable table -->
         <div style="overflow-x:auto">
           <table style="width:100%;border-collapse:collapse;font-size:11px;min-width:1100px">
@@ -1533,25 +1612,69 @@ window.addEventListener('load', function() {
 
       <!-- ── IRN SHIPPING TABLE ── -->
       <div class="card">
-        <div class="card-title">Inspection Release Notes — Pipes Released &amp; Shipping Status</div>
+        <!-- Header con titolo e pulsanti export -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+          <div class="card-title" style="margin-bottom:0">Inspection Release Notes — Pipes Released &amp; Shipping Status</div>
+          <div style="display:flex;gap:8px">
+            <button onclick="exportIRNToExcel()" style="background:rgba(46,196,182,0.1);color:#2ec4b6;border:1px solid rgba(46,196,182,0.3);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
+              📊 Export XLSX
+            </button>
+            <button onclick="window.print()" style="background:rgba(231,111,81,0.1);color:#e76f51;border:1px solid rgba(231,111,81,0.3);padding:6px 14px;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
+              📄 Export PDF
+            </button>
+          </div>
+        </div>
 
-        <!-- Summary KPI bar -->
-        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">
-          <div style="background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:10px;padding:12px 16px;text-align:center">
-            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Total IRNs</div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:#fff">67</div>
+        <!-- Summary KPI bar con gradiente -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:20px">
+          
+          <!-- Total IRNs -->
+          <div style="background:linear-gradient(135deg,rgba(0,180,216,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(0,180,216,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:var(--acc);opacity:0.08;border-radius:0 12px 0 50%"></div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Total IRNs</div>
+            <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:var(--acc);line-height:1">67</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:6px">Inspection Release Notes</div>
           </div>
-          <div style="background:rgba(46,196,182,0.08);border:1px solid rgba(46,196,182,0.2);border-radius:10px;padding:12px 16px;text-align:center">
-            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Pipes Released</div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:#2ec4b6">2,104</div>
+
+          <!-- Pipes Released -->
+          <div style="background:linear-gradient(135deg,rgba(46,196,182,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(46,196,182,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:#2ec4b6;opacity:0.08;border-radius:0 12px 0 50%"></div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Pipes Released</div>
+            <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:#2ec4b6;line-height:1">2,104</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:6px">Total pipes with IRN</div>
           </div>
-          <div style="background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:10px;padding:12px 16px;text-align:center">
-            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Pipes Sent</div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:#00b4d8">1,438</div>
+
+          <!-- Pipes Sent -->
+          <div style="background:linear-gradient(135deg,rgba(0,180,216,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(0,180,216,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:#00b4d8;opacity:0.08;border-radius:0 12px 0 50%"></div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Pipes Sent</div>
+            <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:#00b4d8;line-height:1">1,438</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:6px">68.3% shipped</div>
           </div>
-          <div style="background:rgba(244,162,97,0.08);border:1px solid rgba(244,162,97,0.2);border-radius:10px;padding:12px 16px;text-align:center">
-            <div style="font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px">Available for Shipping</div>
-            <div style="font-family:'Barlow Condensed',sans-serif;font-size:26px;font-weight:700;color:#f4a261">666</div>
+
+          <!-- Available for Shipping -->
+          <div style="background:linear-gradient(135deg,rgba(244,162,97,0.12) 0%,var(--card-bg) 100%);border:1px solid rgba(244,162,97,0.25);border-radius:12px;padding:14px;position:relative;overflow:hidden">
+            <div style="position:absolute;top:0;right:0;width:60px;height:60px;background:#f4a261;opacity:0.08;border-radius:0 12px 0 50%"></div>
+            <div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:6px">Available for Shipping</div>
+            <div style="font-family:var(--fc);font-size:24px;font-weight:700;color:#f4a261;line-height:1">666</div>
+            <div style="font-size:11px;color:var(--muted);margin-top:6px">Awaiting dispatch</div>
+          </div>
+        </div>
+
+        <!-- Progress Bar moderna -->
+        <div style="background:var(--metric-bg);padding:14px;border-radius:12px;border:1px solid var(--border);margin-bottom:20px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+            <span style="font-size:12px;font-weight:600;color:var(--text)">Shipping progress</span>
+            <span style="font-family:var(--fc);font-size:20px;font-weight:700;color:#2ec4b6">68.3%</span>
+          </div>
+          <div style="width:100%;height:10px;background:rgba(0,0,0,0.2);border-radius:5px;position:relative;overflow:hidden">
+            <div style="width:68.3%;height:100%;background:linear-gradient(90deg,#2ec4b6 0%,var(--acc) 100%);border-radius:5px"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)">
+            <span>0 pipes</span>
+            <span style="color:#00b4d8">1,438 sent</span>
+            <span style="color:#f4a261">666 available</span>
+            <span style="color:#2ec4b6">2,104 released</span>
           </div>
         </div>
 
@@ -1562,7 +1685,7 @@ window.addEventListener('load', function() {
 
         <!-- Table -->
         <div style="overflow-x:auto;max-height:420px;overflow-y:auto">
-          <table style="font-size:11px">
+          <table id="irn-table" style="font-size:11px">
             <thead style="position:sticky;top:0;z-index:2;background:var(--nav-bg)">
               <tr>
                 <th style="min-width:220px">SAIPEM PO / IRN</th>
@@ -2003,195 +2126,152 @@ window.addEventListener('load', function() {
     <div id="tab-challenges" class="section">
 
       <!-- header info -->
-      <div style="background:#0f2040;border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
-        <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">Document</div><div style="font-weight:600;color:#fff;font-size:13px">WSR 45650 — Weld Summary Register Rev. 4</div></div>
-        <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">Purchaser</div><div style="font-weight:600;color:#fff;font-size:13px">Sumitomo Deutschland GmbH</div></div>
-        <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">Project</div><div style="font-weight:600;color:#fff;font-size:13px">QatarGas North Field Production Sustainability 3b</div></div>
-        <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">PO No.</div><div style="font-weight:600;color:#00b4d8;font-size:13px">LDN-LP-23-010-01</div></div>
-        <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">EEW Order No.</div><div style="font-weight:600;color:#00b4d8;font-size:13px">45.650</div></div>
+      <div style="background:var(--metric-bg);border:1px solid var(--border);border-radius:12px;padding:14px 18px;margin-bottom:16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px">
+        <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">Document</div><div style="font-weight:600;color:var(--text);font-size:13px">WSR 45650 Rev. 4</div></div>
+        <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">Purchaser</div><div style="font-weight:600;color:var(--text);font-size:13px">Sumitomo Deutschland GmbH</div></div>
+        <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">Project</div><div style="font-weight:600;color:var(--text);font-size:13px">NFPS 3b</div></div>
+        <div><div style="font-size:10px;text-transform:uppercase;letter-spacing:0.5px;color:var(--muted);margin-bottom:4px">EEW Order</div><div style="font-weight:600;color:var(--acc);font-size:13px">45.650</div></div>
       </div>
 
       <!-- CARBON STEEL WELDS -->
-      <div class="card">
-        <div class="card-title" style="color:#f4a261">Carbon steel weld — WPS applied to the order</div>
-        <div style="overflow-x:auto">
-          <table style="font-size:11px;min-width:980px">
-            <tr style="background:rgba(244,162,97,0.10)">
-              <th>WPS</th><th>Welding practice</th><th>Actual thickness</th><th>Qualified diameter</th><th>Qualified area of application</th><th>Mat. grade</th><th>Supporting PQR</th><th>EEW item</th><th>Delivery condition</th><th>Clad overlay</th><th>Remarks</th>
-            </tr>
-            <tr>
-              <td style="font-weight:700;color:#f4a261">45650 / 1A</td>
-              <td>SAW<br><span style="font-size:10px;color:var(--muted)">Punch Through</span></td>
-              <td>25.4 mm</td>
-              <td>LW-N/A</td>
-              <td>19.05 – 31.75 mm</td>
-              <td>SAWL 450 QT<br>SAWL 450 TMCP</td>
-              <td style="font-size:10px">N0913_CarbonSteelPart<br>N0914_CarbonSteelPart<br>N0918_CarbonSteelPart<br>N0919_CarbonSteelPart<br>N0920_CarbonSteelPart</td>
-              <td style="font-size:10px">100, 101<br>400, 401</td>
-              <td>QT<br>TMCP</td>
-              <td>UNS N06625<br>UNS N08825</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td style="font-weight:700;color:#f4a261">45650 / 1B</td>
-              <td>SAW Multilayer<br><span style="font-size:10px;color:var(--muted)">with milling from backside</span></td>
-              <td>30.2 mm<br>30.2 – 39.7 mm</td>
-              <td>LW-N/A</td>
-              <td>22.65 – 37.75 mm<br>29.78 – 49.63 mm</td>
-              <td>SAWL 450 TMCP<br>SAWL 450 QT</td>
-              <td style="font-size:10px">N0921_CarbonSteelPart<br>N0916_CarbonSteelPart<br>N0923_CarbonSteelPart</td>
-              <td style="font-size:10px">500, 501<br>200, 201, 600, 601<br>700, 701</td>
-              <td>TMCP<br>QT</td>
-              <td>UNS N08825<br>UNS N06625</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td style="font-weight:700;color:#f4a261">45650 / 1C</td>
-              <td>SAW Multilayer<br><span style="font-size:10px;color:var(--muted)">with milling from backside</span></td>
-              <td>27.5 – 34.1 mm</td>
-              <td>LW-N/A</td>
-              <td>25.58 – 46.63 mm</td>
-              <td>SAWL 450 QT</td>
-              <td style="font-size:10px">N0901_CarbonSteelPart<br>N0902_CarbonSteelPart</td>
-              <td style="font-size:10px">1001–1003, 2001, 2002<br>3001, 3002, 4001, 4002</td>
-              <td>QT</td>
-              <td>UNS N06625</td>
-              <td style="color:#f4a261;font-weight:600">Motherpipes for Bends</td>
-            </tr>
-            <tr>
-              <td style="font-weight:700;color:#f4a261">45650 / 1D</td>
-              <td>SAW Multilayer<br><span style="font-size:10px;color:var(--muted)">with milling from backside</span></td>
-              <td>34.9 – 39.7 mm</td>
-              <td>LW-N/A</td>
-              <td>26.18 – 43.63 mm</td>
-              <td>SAWL 450 QT</td>
-              <td style="font-size:10px">N0926_CarbonSteelPart<br>N0929_CarbonSteelPart</td>
-              <td style="font-size:10px">300, 301, 800, 801</td>
-              <td>QT</td>
-              <td>UNS N06625</td>
-              <td>—</td>
-            </tr>
-          </table>
+      <div class="card-title" style="color:#f4a261;margin-bottom:12px">Carbon steel weld — WPS applied</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:24px">
+        
+        <!-- 45650/1A -->
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:4px solid #f4a261">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+            <span style="font-weight:600;font-size:15px;color:#f4a261">45650 / 1A</span>
+            <span style="background:rgba(244,162,97,0.15);color:#f4a261;font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600">SAW</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Punch Through</div>
+          <div style="border-top:1px solid var(--border);padding-top:12px;font-size:12px">
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Thickness:</span> 25.4 mm</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Material:</span> SAWL 450 QT/TMCP</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Items:</span> 100, 101, 400, 401</div>
+            <div><span style="color:var(--muted)">Clad:</span> N06625 / N08825</div>
+          </div>
+        </div>
+
+        <!-- 45650/1B -->
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:4px solid #f4a261">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+            <span style="font-weight:600;font-size:15px;color:#f4a261">45650 / 1B</span>
+            <span style="background:rgba(244,162,97,0.15);color:#f4a261;font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600">SAW ML</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Multilayer with backside milling</div>
+          <div style="border-top:1px solid var(--border);padding-top:12px;font-size:12px">
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Thickness:</span> 30.2 – 39.7 mm</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Material:</span> SAWL 450 TMCP/QT</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Items:</span> 200, 201, 500, 501, 600, 601, 700, 701</div>
+            <div><span style="color:var(--muted)">Clad:</span> N08825 / N06625</div>
+          </div>
+        </div>
+
+        <!-- 45650/1C -->
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:4px solid #f4a261">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+            <span style="font-weight:600;font-size:15px;color:#f4a261">45650 / 1C</span>
+            <span style="background:rgba(244,162,97,0.15);color:#f4a261;font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600">SAW ML</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px;font-weight:600;color:#f4a261">Motherpipes for Bends</div>
+          <div style="border-top:1px solid var(--border);padding-top:12px;font-size:12px">
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Thickness:</span> 27.5 – 34.1 mm</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Material:</span> SAWL 450 QT</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Items:</span> 1001–1003, 2001, 2002, 3001, 3002, 4001, 4002</div>
+            <div><span style="color:var(--muted)">Clad:</span> N06625</div>
+          </div>
+        </div>
+
+        <!-- 45650/1D -->
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:4px solid #f4a261">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+            <span style="font-weight:600;font-size:15px;color:#f4a261">45650 / 1D</span>
+            <span style="background:rgba(244,162,97,0.15);color:#f4a261;font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600">SAW ML</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Multilayer with backside milling</div>
+          <div style="border-top:1px solid var(--border);padding-top:12px;font-size:12px">
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Thickness:</span> 34.9 – 39.7 mm</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Material:</span> SAWL 450 QT</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Items:</span> 300, 301, 800, 801</div>
+            <div><span style="color:var(--muted)">Clad:</span> N06625</div>
+          </div>
         </div>
       </div>
 
       <!-- RES CLAD WELDS -->
-      <div class="card">
-        <div class="card-title" style="color:#2ec4b6">RES clad weld — WPS applied to the order</div>
-        <div style="overflow-x:auto">
-          <table style="font-size:11px;min-width:980px">
-            <tr style="background:rgba(46,196,182,0.08)">
-              <th>WPS</th><th>Welding practice</th><th>Actual CRA thickness</th><th>Qualified diameter</th><th>Qualified area of application</th><th>Mat. grade</th><th>Supporting PQR</th><th>EEW item</th><th>Delivery condition</th><th>Clad overlay</th><th>Remarks</th>
-            </tr>
-            <tr>
-              <td rowspan="2" style="font-weight:700;color:#2ec4b6">45650 / 2A</td>
-              <td rowspan="2">RES</td>
-              <td>3 mm CRA</td>
-              <td>LW-N/A</td>
-              <td>2.25 – 4.5 mm</td>
-              <td>UNS N08825</td>
-              <td style="font-size:10px">N0918_CRA Part<br>N0919_CRA Part</td>
-              <td style="font-size:10px">400, 401, 500, 501</td>
-              <td>TMCP</td>
-              <td>UNS N08825</td>
-              <td style="font-size:10px;color:#f4a261">incl. PQR N0918-ST<br>(START STOP Demonstration)</td>
-            </tr>
-            <tr>
-              <td>3 – 3.5 mm CRA</td>
-              <td>LW-N/A</td>
-              <td>2.25 – 4.5 mm</td>
-              <td>UNS N06625</td>
-              <td style="font-size:10px">N0901_CRA Part<br>N0902_CRA Part</td>
-              <td style="font-size:10px">100, 101, 600, 601<br>1001–1003, 2001, 2002<br>3001, 3002, 4001, 4002</td>
-              <td>QT</td>
-              <td>UNS N06625</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td style="font-weight:700;color:#2ec4b6">45650 / 2B</td>
-              <td>RES + SAW</td>
-              <td>6 mm CRA</td>
-              <td>LW-N/A</td>
-              <td>4.5 – 9 mm</td>
-              <td>UNS N06625</td>
-              <td style="font-size:10px">N0916_CRA Part</td>
-              <td style="font-size:10px">200, 201, 300, 301<br>700, 701, 800, 801</td>
-              <td>QT</td>
-              <td>UNS N06625</td>
-              <td style="font-size:10px;color:#f4a261">incl. PQR N0918-ST (START STOP)<br>Add. qualification N0929-SS1 &amp; -SS2 still pending</td>
-            </tr>
-          </table>
+      <div class="card-title" style="color:#2ec4b6;margin-bottom:12px">RES clad weld — WPS applied</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:24px">
+        
+        <!-- 45650/2A -->
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:4px solid #2ec4b6">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+            <span style="font-weight:600;font-size:15px;color:#2ec4b6">45650 / 2A</span>
+            <span style="background:rgba(46,196,182,0.15);color:#2ec4b6;font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600">RES</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Dual qualification: N08825 & N06625</div>
+          <div style="border-top:1px solid var(--border);padding-top:12px;font-size:12px">
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">CRA thickness:</span> 3 – 3.5 mm</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Area:</span> 2.25 – 4.5 mm</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Items:</span> 100, 101, 400, 401, 500, 501, 600, 601, 1001–1003, 2001, 2002, 3001, 3002, 4001, 4002</div>
+            <div style="background:rgba(244,162,97,0.1);color:#f4a261;font-size:11px;padding:8px;border-radius:6px;margin-top:10px">incl. PQR N0918-ST (START STOP)</div>
+          </div>
+        </div>
+
+        <!-- 45650/2B -->
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:4px solid #2ec4b6">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+            <span style="font-weight:600;font-size:15px;color:#2ec4b6">45650 / 2B</span>
+            <span style="background:rgba(46,196,182,0.15);color:#2ec4b6;font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600">RES+SAW</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">6 mm CRA thickness</div>
+          <div style="border-top:1px solid var(--border);padding-top:12px;font-size:12px">
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">CRA thickness:</span> 6 mm</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Area:</span> 4.5 – 9 mm</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Items:</span> 200, 201, 300, 301, 700, 701, 800, 801</div>
+            <div style="background:rgba(244,162,97,0.1);color:#f4a261;font-size:11px;padding:8px;border-radius:6px;margin-top:10px">incl. N0918-ST (START STOP)<br>Add. qual. N0929-SS1 & -SS2 pending</div>
+          </div>
         </div>
       </div>
 
       <!-- REPAIR CS WELD -->
-      <div class="card">
-        <div class="card-title" style="color:#e76f51">Repair carbon steel weld — WPS applied to the order</div>
-        <div style="overflow-x:auto">
-          <table style="font-size:11px;min-width:980px">
-            <tr style="background:rgba(231,111,81,0.08)">
-              <th>WPS</th><th>Welding practice</th><th>Actual thickness</th><th>Qualified diameter</th><th>Qualified area of application</th><th>Mat. grade</th><th>Supporting PQR</th><th>EEW item</th><th>Delivery condition</th><th>Clad overlay</th>
-            </tr>
-            <tr>
-              <td rowspan="2" style="font-weight:700;color:#e76f51">45650 / 3A</td>
-              <td rowspan="2">SMAW<br><span style="font-size:10px;color:var(--muted)">Partial repair — carbon steel outside</span></td>
-              <td>25.4 – 30.2 mm</td>
-              <td>LW-N/A</td>
-              <td>22.65 – 37.75 mm</td>
-              <td>SAWL 450 TMCP</td>
-              <td style="font-size:10px">N0920-R</td>
-              <td style="font-size:10px">400, 401, 500, 501</td>
-              <td>TMCP</td>
-              <td>N/A</td>
-            </tr>
-            <tr>
-              <td>25.4 – 39.7 mm</td>
-              <td>LW-N/A</td>
-              <td>22.65 – 49.63 mm</td>
-              <td>SAWL 450 QT</td>
-              <td style="font-size:10px">N0914-R<br>ITM 2017551-4</td>
-              <td style="font-size:10px">100, 101 — 200, 201 — 300, 301<br>600, 601 — 700, 701 — 800, 801<br>1001–1003, 2001, 2002<br>3001, 3002, 4001, 4002</td>
-              <td>QT</td>
-              <td>N/A</td>
-            </tr>
-          </table>
+      <div class="card-title" style="color:#e76f51;margin-bottom:12px">Repair carbon steel weld — WPS applied</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:24px">
+        
+        <!-- 45650/3A -->
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:4px solid #e76f51">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+            <span style="font-weight:600;font-size:15px;color:#e76f51">45650 / 3A</span>
+            <span style="background:rgba(231,111,81,0.15);color:#e76f51;font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600">SMAW</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Partial repair — carbon steel outside</div>
+          <div style="border-top:1px solid var(--border);padding-top:12px;font-size:12px">
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Thickness:</span> 25.4 – 39.7 mm</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Material:</span> SAWL 450 TMCP/QT</div>
+            <div><span style="color:var(--muted)">Items:</span> All items</div>
+          </div>
         </div>
       </div>
 
       <!-- REPAIR RES CLAD WELD -->
-      <div class="card" style="margin-bottom:0">
-        <div class="card-title" style="color:#e76f51">Repair RES clad weld — WPS applied to the order</div>
-        <div style="overflow-x:auto">
-          <table style="font-size:11px;min-width:980px">
-            <tr style="background:rgba(231,111,81,0.08)">
-              <th>WPS</th><th>Welding practice</th><th>Actual CRA thickness</th><th>Qualified diameter</th><th>Qualified area of application</th><th>Mat. grade</th><th>Supporting PQR</th><th>EEW item</th><th>Delivery condition</th><th>Clad overlay</th>
-            </tr>
-            <tr>
-              <td rowspan="2" style="font-weight:700;color:#e76f51">45650 / 4A</td>
-              <td rowspan="2">GTAW<br><span style="font-size:10px;color:var(--muted)">Partial repair — RES clad weld</span></td>
-              <td>3 mm CRA</td>
-              <td>LW-N/A</td>
-              <td>2.25 – 4.5 mm</td>
-              <td>UNS N08825</td>
-              <td style="font-size:10px">N0921-R</td>
-              <td style="font-size:10px">400, 401, 500, 501</td>
-              <td>TMCP</td>
-              <td>UNS N08825</td>
-            </tr>
-            <tr>
-              <td>3 – 9 mm CRA</td>
-              <td>LW-N/A</td>
-              <td>2.25 – 9 mm</td>
-              <td>UNS N06625</td>
-              <td style="font-size:10px">ITM 2017551-1</td>
-              <td style="font-size:10px">100, 101, 600, 601<br>1001–1003, 2001, 2002<br>3001, 3002, 4001, 4002<br>200, 201, 300, 301<br>700, 701, 800, 801</td>
-              <td>QT</td>
-              <td>UNS N06625</td>
-            </tr>
-          </table>
+      <div class="card-title" style="color:#e76f51;margin-bottom:12px">Repair RES clad weld — WPS applied</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;margin-bottom:16px">
+        
+        <!-- 45650/4A -->
+        <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:12px;padding:16px;border-left:4px solid #e76f51">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px">
+            <span style="font-weight:600;font-size:15px;color:#e76f51">45650 / 4A</span>
+            <span style="background:rgba(231,111,81,0.15);color:#e76f51;font-size:11px;padding:3px 8px;border-radius:12px;font-weight:600">GTAW</span>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:12px">Partial repair — RES clad weld</div>
+          <div style="border-top:1px solid var(--border);padding-top:12px;font-size:12px">
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">CRA thickness:</span> 3 – 6 mm</div>
+            <div style="margin-bottom:6px"><span style="color:var(--muted)">Area:</span> 2.25 – 9 mm</div>
+            <div><span style="color:var(--muted)">Clad:</span> N08825 / N06625</div>
+          </div>
         </div>
-        <div style="font-size:10px;color:var(--muted);margin-top:8px">incl. PQR N0918-ST (START STOP Demonstration) &nbsp;|&nbsp; LW-N/A = Longitudinal Weld, diameter Not Applicable (pipe is formed from plate)</div>
       </div>
+      
+      <div style="font-size:10px;color:var(--muted);padding:12px;background:var(--metric-bg);border-radius:8px">LW-N/A = Longitudinal Weld, diameter Not Applicable (pipe is formed from plate)</div>
 
     </div>
 
@@ -2888,6 +2968,51 @@ function printReport() {
       btn.disabled = false;
     }, 2000);
   }
+}
+
+
+/* ── EXPORT IRN TABLE TO EXCEL ── */
+function exportIRNToExcel() {
+  // Prepara i dati dalla tabella IRN
+  var table = document.getElementById('irn-table');
+  var rows = [];
+  
+  // Header
+  var headerRow = ['SAIPEM PO / IRN', 'Pipes Released', 'Length (mm)', 'Pipes Sent', 'Avail. Shipping', 'Sent %'];
+  rows.push(headerRow);
+  
+  // Body data dal tbody
+  var tbody = document.getElementById('irn-tbody');
+  var trs = tbody.getElementsByTagName('tr');
+  for (var i = 0; i < trs.length; i++) {
+    var tds = trs[i].getElementsByTagName('td');
+    var row = [];
+    for (var j = 0; j < tds.length; j++) {
+      var text = tds[j].textContent.trim();
+      row.push(text);
+    }
+    rows.push(row);
+  }
+  
+  // Footer totals
+  rows.push(['TOTAL', '2,104', '26,112,442', '1,438', '666', '']);
+  
+  // Crea CSV
+  var csv = '';
+  for (var r = 0; r < rows.length; r++) {
+    csv += rows[r].join(',') + '\n';
+  }
+  
+  // Download
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var link = document.createElement('a');
+  var url = URL.createObjectURL(blob);
+  link.setAttribute('href', url);
+  link.setAttribute('download', 'IRN_Shipping_Status_' + new Date().toISOString().slice(0,10) + '.csv');
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
 
 /* ── THEME DROPDOWN ── */

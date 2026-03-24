@@ -1568,16 +1568,16 @@ window.addEventListener('load', function() {
         <div style="background:var(--metric-bg);padding:16px;margin:0;border-bottom:1px solid var(--border)">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
             <span style="font-size:12px;font-weight:600;color:var(--text)">Overall completion</span>
-            <span style="font-family:var(--fc);font-size:20px;font-weight:700;color:#2ec4b6">48.2%</span>
+            <span style="font-family:var(--fc);font-size:20px;font-weight:700;color:#2ec4b6" id="overall-completion-pct">48.2%</span>
           </div>
           <div style="width:100%;height:10px;background:rgba(0,0,0,0.2);border-radius:5px;position:relative;overflow:hidden">
-            <div style="width:48.2%;height:100%;background:linear-gradient(90deg,#2ec4b6 0%,var(--acc) 100%);border-radius:5px"></div>
+            <div id="overall-completion-bar" style="width:48.2%;height:100%;background:linear-gradient(90deg,#2ec4b6 0%,var(--acc) 100%);border-radius:5px"></div>
           </div>
           <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)">
             <span>0 m</span>
-            <span style="color:#2ec4b6">26,038 m released</span>
-            <span style="color:#f4a261">3,228 m pending</span>
-            <span style="color:var(--text)">54,022 m total</span>
+            <span style="color:#2ec4b6"><span data-ov="rel">26,038</span> m released</span>
+            <span style="color:#f4a261"><span data-ov="pend">3,228</span> m pending</span>
+            <span style="color:var(--text)"><span data-ov="poQty">54,022</span> m total</span>
           </div>
         </div>
         
@@ -1606,13 +1606,13 @@ window.addEventListener('load', function() {
             <tfoot>
               <tr style="background:rgba(0,180,216,0.10);border-top:1px solid rgba(0,180,216,0.3)">
                 <td colspan="6" style="padding:8px 10px;font-weight:700;color:#fff;font-size:11px;text-transform:uppercase;letter-spacing:0.4px">Total</td>
-                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#fff">29,265.5</td>
-                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#2ec4b6">26,037.6</td>
-                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#f4a261">+3,227.8</td>
-                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#fff">54,021.6</td>
-                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#e76f51">−27,984.0</td>
-                <td style="padding:8px 10px;text-align:right;font-weight:700;color:var(--acc)">54.2%</td>
-                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#2ec4b6">48.2%</td>
+                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#fff" data-ov="insp">29,265</td>
+                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#2ec4b6" data-ov="rel">26,038</td>
+                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#f4a261" data-ov="pend">+3,228</td>
+                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#fff" data-ov="poQty">54,022</td>
+                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#e76f51" data-ov="poBal">-27,984</td>
+                <td style="padding:8px 10px;text-align:right;font-weight:700;color:var(--acc)" id="prod-pct-total">54.2%</td>
+                <td style="padding:8px 10px;text-align:right;font-weight:700;color:#2ec4b6" id="rel-pct-total">48.2%</td>
               </tr>
             </tfoot>
           </table>
@@ -3026,7 +3026,17 @@ function exportProductionToExcel() {
     rows.push(row);
   }
   
-  rows.push(['', '', '', '', '', 'TOTAL', '29,265.5', '26,037.6', '+3,227.8', '54,021.6', '−27,984.0', '54.2%', '48.2%']);
+  // Get dynamic totals from footer
+  var table = document.getElementById('production-table');
+  var tfoot = table.getElementsByTagName('tfoot')[0];
+  if (tfoot) {
+    var footerCells = tfoot.getElementsByTagName('td');
+    var totalRow = [];
+    for (var k = 0; k < footerCells.length; k++) {
+      totalRow.push(footerCells[k].textContent.trim());
+    }
+    rows.push(totalRow);
+  }
   
   downloadXLSX(rows, 'Production_Progress');
 }
@@ -3568,6 +3578,24 @@ function applyKPIJson(d) {
   if(!isNaN(pend))  setOv('pend',  (!isNaN(pend)?(pend>=0?'+':''): '')+Math.round(pend).toLocaleString('it-IT'));
   if(!isNaN(poQty)) setOv('poQty', Math.round(poQty).toLocaleString('it-IT'));
   if(!isNaN(poBal)) setOv('poBal', Math.round(poBal).toLocaleString('it-IT'));
+
+  /* Calculate percentages for footer */
+  if(!isNaN(insp) && !isNaN(poQty) && poQty > 0) {
+    var prodPct = (insp / poQty * 100);
+    var prodPctEl = document.getElementById('prod-pct-total');
+    if(prodPctEl) prodPctEl.textContent = prodPct.toFixed(1) + '%';
+  }
+  if(!isNaN(rel) && !isNaN(poQty) && poQty > 0) {
+    var relPct = (rel / poQty * 100);
+    var relPctEl = document.getElementById('rel-pct-total');
+    if(relPctEl) relPctEl.textContent = relPct.toFixed(1) + '%';
+    
+    // Update overall completion progress bar
+    var overallPctEl = document.getElementById('overall-completion-pct');
+    var overallBarEl = document.getElementById('overall-completion-bar');
+    if(overallPctEl) overallPctEl.textContent = relPct.toFixed(1) + '%';
+    if(overallBarEl) overallBarEl.style.width = relPct.toFixed(1) + '%';
+  }
 
   /* VOESTALPINE KPI tracker */
   if(!isNaN(pct)) {

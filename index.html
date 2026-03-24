@@ -1669,16 +1669,16 @@ window.addEventListener('load', function() {
         <div style="background:var(--metric-bg);padding:14px;border-radius:12px;border:1px solid var(--border);margin-bottom:20px">
           <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
             <span style="font-size:12px;font-weight:600;color:var(--text)">Shipping progress</span>
-            <span style="font-family:var(--fc);font-size:20px;font-weight:700;color:#2ec4b6">68.3%</span>
+            <span style="font-family:var(--fc);font-size:20px;font-weight:700;color:#2ec4b6" id="shipping-progress-pct">68.3%</span>
           </div>
           <div style="width:100%;height:10px;background:rgba(0,0,0,0.2);border-radius:5px;position:relative;overflow:hidden">
-            <div style="width:68.3%;height:100%;background:linear-gradient(90deg,#2ec4b6 0%,var(--acc) 100%);border-radius:5px"></div>
+            <div id="shipping-progress-bar" style="width:68.3%;height:100%;background:linear-gradient(90deg,#2ec4b6 0%,var(--acc) 100%);border-radius:5px"></div>
           </div>
           <div style="display:flex;justify-content:space-between;margin-top:8px;font-size:10px;color:var(--muted)">
             <span>0 pipes</span>
-            <span style="color:#00b4d8">1,438 sent</span>
-            <span style="color:#f4a261">666 available</span>
-            <span style="color:#2ec4b6">2,104 released</span>
+            <span style="color:#00b4d8"><span id="irn-sent-total">1,438</span> sent</span>
+            <span style="color:#f4a261"><span id="irn-avail-total">666</span> available</span>
+            <span style="color:#2ec4b6"><span id="irn-rel-total">2,104</span> released</span>
           </div>
         </div>
 
@@ -2657,13 +2657,20 @@ function renderIrnTable() {
 function renderIrnChart() {
   var canvas = document.getElementById('irnChart');
   if (!canvas || typeof Chart === 'undefined') return;
+  
+  // Destroy existing chart if it exists
+  if (window.irnChartInstance) {
+    window.irnChartInstance.destroy();
+  }
+  
   // Only show IRN rows (not PO summary rows), filter to those with data
   var chartRows = irnRows.filter(function(r){ return r.po !== '1519921' && r.po !== '1506050'; });
   // Shorten labels
   var labels = chartRows.map(function(r){ return r.po.replace('COMP3-1506050-','').replace('COMP3-1519921-','').replace('COMP3-TBA-','TBA-'); });
   var sent = chartRows.map(function(r){ return r.sent; });
   var avail = chartRows.map(function(r){ return r.avail; });
-  new Chart(canvas, {
+  
+  window.irnChartInstance = new Chart(canvas, {
     type: 'bar',
     data: {
       labels: labels,
@@ -3402,7 +3409,7 @@ document.addEventListener('DOMContentLoaded', function() {
    Paste your GAS Web App URL below after deploying the script.
    Leave empty to disable live sync (dashboard shows static values).
 */
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbxdppQiPapHwe00kVcMhRJL6P931OiaDIc3ZEBCVRLyynkYqTjZN-sL0gDBWrCFKYTm/exec';
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbwow_SUz2K_7HQd3wp5rLXjgxl5XB3YyN28iRLkWkRMKeLS1F0wetepDrbHfAujs6MQ/exec';
 
 var _syncOk = null;  /* null=never tried, true=ok, false=error */
 
@@ -3620,6 +3627,63 @@ function applyPunchJson(items) {
   renderPunchList(items);
 }
 
+function applyIRNJson(items) {
+  if (!items || !items.length) return;
+  
+  // Update global irnRows array
+  irnRows.length = 0; // Clear existing data
+  items.forEach(function(item) {
+    irnRows.push(item);
+  });
+  
+  // Re-render table
+  renderIrnTable();
+  
+  // Update summary KPIs
+  var totalRel = 0, totalSent = 0, totalAvail = 0, totalLen = 0;
+  var irnCount = 0;
+  
+  items.forEach(function(r) {
+    // Count only actual IRN rows (not PO summary rows)
+    if (r.po !== '1519921' && r.po !== '1506050') {
+      irnCount++;
+    }
+    totalRel += r.rel || 0;
+    totalSent += r.sent || 0;
+    totalAvail += r.avail || 0;
+    totalLen += r.len || 0;
+  });
+  
+  // Update footer totals
+  var footerCells = document.querySelectorAll('#irn-table tfoot td');
+  if (footerCells.length >= 5) {
+    footerCells[1].textContent = totalRel.toLocaleString('it-IT');
+    footerCells[2].textContent = totalLen.toLocaleString('it-IT');
+    footerCells[3].textContent = totalSent.toLocaleString('it-IT');
+    footerCells[4].textContent = totalAvail.toLocaleString('it-IT');
+  }
+  
+  // Update progress bar labels
+  var relEl = document.getElementById('irn-rel-total');
+  var sentEl = document.getElementById('irn-sent-total');
+  var availEl = document.getElementById('irn-avail-total');
+  if (relEl) relEl.textContent = totalRel.toLocaleString('it-IT');
+  if (sentEl) sentEl.textContent = totalSent.toLocaleString('it-IT');
+  if (availEl) availEl.textContent = totalAvail.toLocaleString('it-IT');
+  
+  // Update shipping progress bar
+  if (totalRel > 0) {
+    var shippingPct = (totalSent / totalRel * 100);
+    var shippingPctEl = document.getElementById('shipping-progress-pct');
+    var shippingBarEl = document.getElementById('shipping-progress-bar');
+    if (shippingPctEl) shippingPctEl.textContent = shippingPct.toFixed(1) + '%';
+    if (shippingBarEl) shippingBarEl.style.width = shippingPct.toFixed(1) + '%';
+  }
+  
+  // Re-render chart with updated data
+  renderIrnChart();
+}
+
 async function loadSheetData() {
   if (!GAS_URL) { setSyncState(null); return; }
   try {
@@ -3635,10 +3699,11 @@ async function loadSheetData() {
     }
     var data = JSON.parse(text);
     if (data.error) throw new Error(data.error);
-    /* data.kpi = KPI values, data.punch = punch list array */
+    /* data.kpi = KPI values, data.punch = punch list array, data.irn = IRN shipping array */
     if (data.kpi) applyKPIJson(data.kpi);
     else applyKPIJson(data); /* backwards compat */
     if (data.punch && data.punch.length) applyPunchJson(data.punch);
+    if (data.irn && data.irn.length) applyIRNJson(data.irn);
     var now = new Date();
     setSyncState(true, now.toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'2-digit'})+' '+now.toLocaleTimeString('it-IT',{hour:'2-digit',minute:'2-digit'}));
   } catch(e) { setSyncState(false, e.message.slice(0,40)); }

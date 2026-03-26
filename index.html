@@ -1153,6 +1153,9 @@
     <span class="tb-live" id="sync-label">Sync</span>
     <span class="tb-sync-label" id="sync-status"></span>
   </div>
+  <button onclick="openConfigModal()" style="background:rgba(0,180,216,0.15);color:var(--acc);border:1px solid rgba(0,180,216,0.3);padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;margin-left:8px" title="Configure Google Sheets URL">
+    ⚙️ Setup
+  </button>
   <div class="tb-div"></div>
   <div class="tb-pill">
     <div class="tb-dot" style="background:#e76f51"></div>
@@ -3406,10 +3409,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 /* ══ GOOGLE APPS SCRIPT ENDPOINT ══
-   Paste your GAS Web App URL below after deploying the script.
-   Leave empty to disable live sync (dashboard shows static values).
+   The URL is now configurable via the ⚙️ Setup button in the top bar.
+   Click the Setup button to configure your Google Apps Script URL.
+   The URL is saved in browser localStorage for persistence.
 */
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbwow_SUz2K_7HQd3wp5rLXjgxl5XB3YyN28iRLkWkRMKeLS1F0wetepDrbHfAujs6MQ/exec';
+var GAS_URL = localStorage.getItem('GAS_URL') || '';
 
 var _syncOk = null;  /* null=never tried, true=ok, false=error */
 
@@ -3716,5 +3720,120 @@ window.addEventListener('load', function() {
 });
 
 </script>
+<!-- ═══════════════════════════════════
+     CONFIG MODAL - Google Sheets Setup
+═══════════════════════════════════ -->
+<div id="config-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);z-index:99999;backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center">
+  <div style="background:var(--card-bg);border:1px solid var(--border);border-radius:16px;max-width:600px;width:90%;padding:32px;box-shadow:0 20px 60px rgba(0,0,0,0.5)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">
+      <h2 style="margin:0;font-size:20px;color:var(--text);font-weight:600">⚙️ Google Sheets Configuration</h2>
+      <button onclick="closeConfigModal()" style="background:transparent;border:none;color:var(--muted);font-size:24px;cursor:pointer;padding:0;width:32px;height:32px;line-height:32px;border-radius:6px;transition:all 0.2s" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">×</button>
+    </div>
+    
+    <div style="margin-bottom:24px">
+      <p style="color:var(--muted);margin:0 0 16px 0;line-height:1.6">
+        Per abilitare la sincronizzazione live, inserisci l'URL del tuo Google Apps Script deployment.<br>
+        <strong style="color:var(--text)">Lascia vuoto per usare il dashboard senza sincronizzazione.</strong>
+      </p>
+      
+      <label style="display:block;color:var(--text);font-size:12px;font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px">
+        Google Apps Script URL
+      </label>
+      <input 
+        type="text" 
+        id="gas-url-input" 
+        placeholder="https://script.google.com/macros/s/ABC123.../exec"
+        style="width:100%;padding:12px 16px;background:var(--metric-bg);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:14px;font-family:monospace;box-sizing:border-box"
+      />
+      
+      <div style="margin-top:12px;padding:12px;background:rgba(0,180,216,0.08);border:1px solid rgba(0,180,216,0.2);border-radius:8px">
+        <p style="margin:0;font-size:11px;color:var(--muted);line-height:1.5">
+          💡 <strong style="color:var(--acc)">Come ottenere l'URL:</strong><br>
+          1. Apri il tuo Google Sheet<br>
+          2. Extensions → Apps Script<br>
+          3. Deploy → New deployment → Web app<br>
+          4. Copia l'URL generato e incollalo qui sopra
+        </p>
+      </div>
+    </div>
+    
+    <div style="display:flex;gap:12px;justify-content:flex-end">
+      <button onclick="closeConfigModal()" style="background:var(--metric-bg);color:var(--muted);border:1px solid var(--border);padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">
+        Annulla
+      </button>
+      <button onclick="saveGasUrl()" style="background:var(--acc);color:#fff;border:none;padding:10px 24px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">
+        💾 Salva e Sincronizza
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+// Config Modal Functions
+function openConfigModal() {
+  var modal = document.getElementById('config-modal');
+  var input = document.getElementById('gas-url-input');
+  if (modal) {
+    modal.style.display = 'flex';
+    // Load current URL from localStorage or default
+    var currentUrl = localStorage.getItem('GAS_URL') || GAS_URL || '';
+    if (input) input.value = currentUrl;
+  }
+}
+
+function closeConfigModal() {
+  var modal = document.getElementById('config-modal');
+  if (modal) modal.style.display = 'none';
+}
+
+function saveGasUrl() {
+  var input = document.getElementById('gas-url-input');
+  var url = input ? input.value.trim() : '';
+  
+  // Salva in localStorage
+  if (url) {
+    localStorage.setItem('GAS_URL', url);
+    GAS_URL = url;
+  } else {
+    localStorage.removeItem('GAS_URL');
+    GAS_URL = '';
+  }
+  
+  closeConfigModal();
+  
+  // Mostra feedback
+  var syncLabel = document.getElementById('sync-label');
+  if (syncLabel) {
+    syncLabel.textContent = url ? 'Saved!' : 'Disabled';
+    setTimeout(function() {
+      syncLabel.textContent = 'Sync';
+    }, 2000);
+  }
+  
+  // Tenta sincronizzazione immediata se URL presente
+  if (url && typeof loadSheetData === 'function') {
+    setTimeout(loadSheetData, 500);
+  }
+}
+
+// Mostra modal al primo avvio se non c'è URL configurato
+window.addEventListener('load', function() {
+  var savedUrl = localStorage.getItem('GAS_URL');
+  if (savedUrl) {
+    GAS_URL = savedUrl;
+  } else if (!GAS_URL || GAS_URL.indexOf('AKfycbx') !== -1) {
+    // URL di default o vuoto -> mostra modal al primo avvio
+    // Aspetta 2 secondi per dare tempo al dashboard di caricarsi
+    setTimeout(function() {
+      var hasSeenConfig = localStorage.getItem('hasSeenConfig');
+      if (!hasSeenConfig) {
+        openConfigModal();
+        localStorage.setItem('hasSeenConfig', 'true');
+      }
+    }, 2000);
+  }
+});
+</script>
+
 </body>
 </html>
